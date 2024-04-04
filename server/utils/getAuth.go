@@ -1,8 +1,6 @@
+package utils
 
-package getAuth
-
-import "fmt"
-
-func getAuth(){
+func GetAuth() string{
     return "hiddentoken" // Make sure to change this
 }
+
