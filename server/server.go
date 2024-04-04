@@ -7,7 +7,7 @@ import (
     "net/http"
     "os"
     "strings"
-    "./server/getAuth"
+    "server/serverlib/getAuth"
 )
 
 func check(e error){
