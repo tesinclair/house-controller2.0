@@ -40,7 +40,9 @@ For reference, I am using camelCase not snake_case simply because I don't like s
 class Notifier():
 
     activeNotifier = None
-    pins = [11, 12, 13, 16, 15, 14, 29, 22, 31, 32]
+    PINS = [11, 12, 13, 16, 15, 14, 29, 22, 31, 32]
+    ON = gpio.LOW
+    OFF = gpio.HIGH
     
     def __new__(cls):
         if cls.activeNotifier:
@@ -50,24 +52,21 @@ class Notifier():
         return cls.activeNotifier
 
     def __init__(self):
-        self.nimPins = 10
-        # The way the led is set up requires this
-        self.on = gpio.LOW
-        self.off = gpio.HIGH 
+        self.numPins = 10
         self.delay = 0.2
         self.iterations = 5
 
     def __enter__(self):
-        gpio.setup(self.pins, gpio.OUT)
-        gpio.output(self.pins, self.off)
+        gpio.setup(self.PINS, gpio.OUT)
+        gpio.output(self.PINS, self.OFF)
         return self
 
     def __exit__(self, exType, exVal, traceback):
         if exType:
             utils.Logger.log(exType, exVal, traceback)
 
-        gpio.output(self.pins, self.off)
-        gpio.setup(self.pins, gpio.IN)
+        gpio.output(self.PINS, self.OFF)
+        gpio.setup(self.PINS, gpio.IN)
         gpio.cleanup()
 
     @classmethod
@@ -79,45 +78,45 @@ class Notifier():
     
     def error(self):
         for _ in range(self.iterations):
-            gpio.output(self.pins, self.on)
+            gpio.output(self.PINS, self.ON)
             time.sleep(self.delay)
-            gpio.output(self.pins, self.off)
+            gpio.output(self.PINS, self.OFF)
             time.sleep(self.delay)
 
     def newReq(self):
         for _ in range(self.iterations):
-            for pin in self.pins:
-                gpio.output(pin, self.on)
+            for pin in self.PINS:
+                gpio.output(pin, self.ON)
                 time.sleep(self.delay)
-                gpio.output(pin, self.off)
+                gpio.output(pin, self.OFF)
 
     def rejectedReq(self):
         for _ in range(self.iterations):
-            for i in range(len(self.pins)/2): 
-                pinL = self.pins[i]
-                pinR = self.pins[-(1 + i)] # Start from right at [-1]
+            for i in range(int(self.numPins/2)): 
+                pinL = self.PINS[i]
+                pinR = self.PINS[-(1 + i)] # Start from right at [-1]
 
-                gpio.output(pinL, self.on)
-                gpio.output(pinR, self.on)
+                gpio.output(pinL, self.ON)
+                gpio.output(pinR, self.ON)
                 time.sleep(self.delay)
-                gpio.output(pinL, self.off)
-                gpio.output(pinR, self.off)
+                gpio.output(pinL, self.OFF)
+                gpio.output(pinR, self.OFF)
 
     def badOptions(self):
         for _ in range(self.iterations):
-            for i in range(len(self.pins)):
+            for i in range(len(self.PINS)):
                 if i % 2 == 0:
-                    gpio.output(self.pins[i], self.on)
+                    gpio.output(self.PINS[i], self.ON)
                 else:
-                    gpio.output(self.pins[i], self.off)
+                    gpio.output(self.PINS[i], self.OFF)
 
             time.sleep(self.delay/2)
 
-            for i in range(len(self.pins)):
+            for i in range(len(self.PINS)):
                 if i % 2 != 0:
-                    gpio.output(self.pins[i], self.on)
+                    gpio.output(self.PINS[i], self.ON)
                 else:
-                    gpio.output(self.pins[i], self.off)
+                    gpio.output(self.PINS[i], self.OFF)
 
             time.sleep(self.delay/2)
                     
