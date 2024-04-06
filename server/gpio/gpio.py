@@ -58,7 +58,7 @@ class Notifier():
         self.iterations = 5
 
     def __enter__(self):
-        if gpio.getmode != gpio.BOARD:
+        if gpio.getmode() != gpio.BOARD:
             gpio.setmode(gpio.BOARD)
         gpio.setup(self.pins, gpio.OUT)
         gpio.output(self.pins, self.off)
@@ -105,12 +105,29 @@ class Notifier():
                 gpio.output(pinL, self.off)
                 gpio.output(pinR, self.off)
 
+    def badOptions(self):
+        for _ in range(self.iterations):
+            for i in range(len(self.pins)):
+                if i % 2 == 0:
+                    gpio.output(self.pins[i], self.on)
+                else:
+                    gpio.output(self.pins[i], self.off)
 
+            time.sleep(self.delay/2)
+
+            for i in range(len(self.pins)):
+                if i % 2 != 0:
+                    gpio.output(self.pins[i], self.on)
+                else:
+                    gpio.output(self.pins[i], self.off)
+
+            time.sleep(self.delay/2)
+                    
 class LedStrip():
-    def __init__(self):
+    def __init__(self, delay=0.2):
         self.numPixels = 100
         self.pixels = None
-        self.delay = 0.2
+        self.delay = delay
         self.red = (255, 0, 0)
         self.green = (0, 255, 0)
         self.blue = (0, 0, 255)
@@ -140,6 +157,10 @@ class LedStrip():
         self.pixels.fill(self.blank)
         self.pixels.show()
         self.pixels.deinit()
+
+    def light(self):
+        self.pixels.fill(self.white)
+        self.pixels.show()
 
     def virginLights(self, offset):
         redL = (0 + offset) % self.numPixels # prevent overflow
@@ -211,7 +232,7 @@ class LedStrip():
             else:
                 self.pixels[i].brightness = tempBrightness/2
         self.pixels.show()
-        time.sleep(self.dealy/2)
+        time.sleep(self.delay/2)
 
     def setBrightness(self, brightness=0.8, isDegree=False, degree=0.1):
         if isDegree:
@@ -219,12 +240,5 @@ class LedStrip():
         else:
             self.pixels.brightness = brightness
 
-def usage():
-    pass 
-
-def main():
-    pass
-
-if __name__ == "__main__":
-    main()
+        self.pixels.show()
 
