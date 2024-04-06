@@ -57,6 +57,9 @@ class Notifier():
         self.iterations = 5
 
     def __enter__(self):
+        if gpio.getmode() == -1:
+            gpio.setmode(gpio.BCM)
+
         gpio.setup(self.PINS, gpio.OUT)
         gpio.output(self.PINS, self.OFF)
         return self
