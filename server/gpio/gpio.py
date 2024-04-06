@@ -58,7 +58,7 @@ class Notifier():
         self.iterations = 5
 
     def __enter__(self):
-        if gpio.getmode() != gpio.BOARD:
+        if gpio.getmode() != 10:
             gpio.setmode(gpio.BOARD)
         gpio.setup(self.pins, gpio.OUT)
         gpio.output(self.pins, self.off)
@@ -137,8 +137,7 @@ class LedStrip():
         self.defaultColor = self.purple
 
     def __enter__(self):
-        self.pixels = neopixel.NeoPixel(board.D10, self.numPixels)
-        self.pixels.brightness = 0.8
+        self.pixels = neopixel.NeoPixel(board.D21, self.numPixels, brightness=1, auto_write=False)
         self.pixels.fill(self.blank)
         self.pixels.show()
         return self
@@ -153,7 +152,6 @@ class LedStrip():
                 with Notifier.getActveNotifier() as err:
                     err.error()
 
-        self.pixels.brightness = 0
         self.pixels.fill(self.blank)
         self.pixels.show()
         self.pixels.deinit()
@@ -187,8 +185,8 @@ class LedStrip():
         self.pixels.fill(color)
 
         for i in range(self.numPixels) - 1:
-            tempBrightness = self.pixels.brightness
-            self.pixels.brightness = tempBrightness/2
+            tempBrightness = self.brightness
+            self.brightness = tempBrightness/2
 
             self.pixels[i].brightness = tempBrightness
             self.pixels.show()
@@ -199,8 +197,8 @@ class LedStrip():
         
         self.pixels.fill(color)
         for i in range(self.numPixels)/2 - 1:
-            tempBrightness = self.pixels.brightness
-            self.pixels.brightness = tempBrightness/2
+            tempBrightness = self.brightness
+            self.brightness = tempBrightness/2
 
             pixelL = self.pixels[i]
             pixelR = self.pixels[-(1 + i)]
@@ -215,8 +213,8 @@ class LedStrip():
 
         self.pixels.fill(color)
 
-        tempBrightness = self.pixels.brightness
-        self.pixels.brightness = tempBrightness/2
+        tempBrightness = self.brightness
+        self.brightness = tempBrightness/2
         
         for i in range(self.numPixels):
             if i % 2 == 0:
@@ -236,9 +234,12 @@ class LedStrip():
 
     def setBrightness(self, brightness=0.8, isDegree=False, degree=0.1):
         if isDegree:
-            self.pixels.brightness = self.pixels.brightness + degree
+            self.brightness = self.brightness + degree
         else:
-            self.pixels.brightness = brightness
+            self.brightness = brightness
 
         self.pixels.show()
+
+
+
 

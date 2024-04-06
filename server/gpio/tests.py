@@ -1,6 +1,6 @@
 import unittest
 import unittest.mock as mock
-from mock import patch
+from unittest.mock import patch
 import time
 from gpio import LedStrip, Notifier
 
