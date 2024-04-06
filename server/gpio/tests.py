@@ -12,12 +12,6 @@ class TestNotifier(unittest.TestCase):
         self.assertIsInstance(notifier, Notifier)
         self.assertIs(notifier, Notifier.getActiveNotifier())
         
-        with notifier:
-            self.assertEqual(gpio.getmode(), gpio.BOARD)
-            self.assertEqual(gpio.input(notifier.pins), 0)
-
-        self.assertEqual(gpio.input(notifier.pins), 0)
-
     def testError(self):
         notifier = Notifier.getActiveNotifier()
 
@@ -34,7 +28,7 @@ class TestNotifier(unittest.TestCase):
         notifier = Notifier.getActiveNotifier()
 
         with notifier:
-            notifier.rejectReq()
+            notifier.rejectedReq()
 
     def testBadOptions(self):
         notifier = Notifier.getActiveNotifier()

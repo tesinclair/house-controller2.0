@@ -58,11 +58,11 @@ class Notifier():
     def __enter__(self):
         if gpio.getmode() == 11:
             gpio.setmode(gpio.BCM)
-            self.PINS = [11, 12, 13, 16, 15, 18, 29, 22, 31, 32]
+            self.PINS = [17, 18, 27, 23, 22, 24, 5, 25, 6, 12]
 
         else:
             gpio.setmode(gpio.BOARD)
-            self.PINS = [17, 18, 27, 23, 22, 24, 5, 25, 6, 12]
+            self.PINS = [11, 12, 13, 16, 15, 18, 29, 22, 31, 32]
 
         gpio.setup(self.PINS, gpio.OUT)
         gpio.output(self.PINS, self.OFF)
@@ -141,6 +141,8 @@ class LedStrip():
         self.defaultColor = self.purple
 
     def __enter__(self):
+        if gpio.getmode() == -1:
+            gpio.setmode(gpio.BCM)
         self.pixels = neopixel.NeoPixel(board.D21, self.numPixels, brightness=1, auto_write=False)
         print(len(self.pixels))
         self.pixels.fill(self.blank)
@@ -239,7 +241,6 @@ class LedStrip():
                 color = round(color * brightness)
 
         self.pixels.show()
-
 
 
 
