@@ -40,6 +40,7 @@ For reference, I am using camelCase not snake_case simply because I don't like s
 class Notifier():
 
     activeNotifier = None
+    pins = [11, 12, 13, 16, 15, 14, 29, 22, 31, 32]
     
     def __new__(cls):
         if cls.activeNotifier:
@@ -50,7 +51,6 @@ class Notifier():
 
     def __init__(self):
         self.nimPins = 10
-        self.pins = [11, 12, 13, 16, 15, 14, 29, 22, 31, 32]
         # The way the led is set up requires this
         self.on = gpio.LOW
         self.off = gpio.HIGH 
@@ -227,7 +227,9 @@ class LedStrip():
 
     def setBrightness(self, brightness=0.8):
 
-        self.pixels = [[round(color * brightness) for color in pixel] for pixel in self.pixels]
+        for pixel in self.pixels:
+            for color in pixel:
+                color = round(color * brightness)
 
         self.pixels.show()
 
