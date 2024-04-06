@@ -50,7 +50,7 @@ class Notifier():
 
     def __init__(self):
         self.nimPins = 10
-        self.pins = [17, 18, 27, 23, 22, 24, 5, 25, 6, 12]
+        self.pins = [11, 12, 13, 16, 15, 14, 29, 22, 31, 32]
         # The way the led is set up requires this
         self.on = gpio.LOW
         self.off = gpio.HIGH 
@@ -58,8 +58,7 @@ class Notifier():
         self.iterations = 5
 
     def __enter__(self):
-        if gpio.getmode() != 10:
-            gpio.setmode(gpio.BOARD)
+        print(gpio.getmode())
         gpio.setup(self.pins, gpio.OUT)
         gpio.output(self.pins, self.off)
         return self
