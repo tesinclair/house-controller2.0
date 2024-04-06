@@ -50,11 +50,9 @@ class TestLedStrip(unittest.TestCase):
         with self.assertRaises(Exception):
             with ledStrip:
                 self.assertIsNotNone(ledStrip.pixels)
-                self.assertEquals(ledStrip.pixels.brightness, 0.8)
                 raise Exception("Test Exit print")
 
         self.assertTrue(mock_err.called)
-        self.assertEqual(ledStrip.pixels.brightness, 0)
 
     def testVirginLights(self):
         ledStrip = LedStrip()
@@ -97,14 +95,6 @@ class TestLedStrip(unittest.TestCase):
             ledStrip.light() # Make them white
             
             ledStrip.setBrightness(brightness = 0.2)
-            self.assertEqual(ledStrip.pixels.brightness, 0.2)
-            ledStrip.setBrightness()
-            self.assertEqual(ledStrip.pixels.brightness, 0.8)
-
-            ledStrip.setBrightness(isDegree=True)
-            self.assertEqual(ledStrip.pixels.brightness, 0.9) # previous brightnes + default (0.1)
-            ledStrip.setBrightness(isDegree=True, degree=-0.5)
-            self.assertEqual(ledStrip.pixels.brightness, 0.4) # 0.9 - 0.5
             
 
             

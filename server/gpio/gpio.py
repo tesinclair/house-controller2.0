@@ -23,7 +23,7 @@ Classes:
             - collapse: creates a collapse from the sides of the leds to the centre
             - flow: creates a flow from one side to the other
             - alternate: creates an alternating pattern from one side to the other
-            - setBrightness: changes the brightness to value brightness unless isdegree, in which case it alters brightness by degree
+            - setBrightness: changes the brightness to value brightness 
 
     - Notifier: This is a 10 pin led that will be used for errors and logging
         Methods:
@@ -195,7 +195,7 @@ class LedStrip():
         dimColor = tuple(round(x/2) for x in color)
         
         self.pixels.fill(dimColor)
-        for i in range(self.numPixels)/2 - 1:
+        for i in range(self.numPixels/2) - 1:
             pixelL = self.pixels[i]
             pixelR = self.pixels[-(1 + i)]
             pixelL = color
@@ -227,11 +227,9 @@ class LedStrip():
         self.pixels.show()
         time.sleep(self.delay/2)
 
-    def setBrightness(self, brightness=0.8, isDegree=False, degree=0.1):
-        if isDegree:
-            self.pixels = [pixel + degree for pixel in self.pixels]
-        else:
-            self.pixels = [round(pixel * brightness) for pixel in self.pixels]
+    def setBrightness(self, brightness=0.8):
+
+        self.pixels = [[round(color * brightness) for color in pixel] for pixel in self.pixels]
 
         self.pixels.show()
 
