@@ -168,9 +168,9 @@ class LedStrip():
         blueL = ((self.numPixels * 2)//3 + offset) % self.numPixels
         blueR = ((self.numPixels + offset) - 1) % self.numPixels
 
-        self.pixels[redL:redR].fill(self.red)
-        self.pixels[greenL:greenR].fill(self.green)
-        self.pixels[blueL:blueR].fill(self.blue)
+        self.pixels[redL:redR] = self.red
+        self.pixels[greenL:greenR] = self.green
+        self.pixels[blueL:blueR] = self.blue
         self.pixels.show()
         time.sleep(self.delay)
     
@@ -181,62 +181,57 @@ class LedStrip():
 
     def flow(self, color=None):
         if not color: color = self.defaultColor # Generally I hate inline if statements, but this is fine
-        
-        self.pixels.fill(color)
+        dimColor = tuple(round(x/2) for x in color)
+        self.pixels.fill(dimColor)
 
-        for i in range(self.numPixels) - 1:
-            tempBrightness = self.brightness
-            self.brightness = tempBrightness/2
-
-            self.pixels[i].brightness = tempBrightness
+        for i in range(self.numPixels):
+            self.pixels[i] = color
             self.pixels.show()
+            self.pixels.fill(dimColor)
             time.sleep(self.delay)
 
     def collapse(self, color=None):
         if not color: color = self.defaultColor
+        dimColor = tuple(round(x/2) for x in color)
         
-        self.pixels.fill(color)
+        self.pixels.fill(dimColor)
         for i in range(self.numPixels)/2 - 1:
-            tempBrightness = self.brightness
-            self.brightness = tempBrightness/2
-
             pixelL = self.pixels[i]
             pixelR = self.pixels[-(1 + i)]
-            pixelL.brightness = tempBrightness
-            pixelR.brightness = tempBrightness
+            pixelL = color
+            pixelR = color
             self.pixels.show()
+            self.pixels.fill(dimColor)
             time.sleep(self.delay)
 
 
     def alternate(self, color=None):
         if not color: color = self.defaultColor
+        dimColor = tuple(round(x/2) for x in color)
 
-        self.pixels.fill(color)
+        self.pixels.fill(dimColor)
 
-        tempBrightness = self.brightness
-        self.brightness = tempBrightness/2
-        
         for i in range(self.numPixels):
             if i % 2 == 0:
-                self.pixels[i].brightness = tempBrightness
+                self.pixels[i] = color
             else:
-                self.pixels[i].brightness = tempBrightness/2
+                self.pixels[i] = dimColor
         self.pixels.show()
         time.sleep(self.delay/2)
 
         for i in range(self.numPixels):
             if i % 2 != 0:
-                self.pixels[i].brightness = tempBrightness
+                self.pixels[i] = color
             else:
-                self.pixels[i].brightness = tempBrightness/2
+                self.pixels[i] = dimColor
         self.pixels.show()
         time.sleep(self.delay/2)
 
     def setBrightness(self, brightness=0.8, isDegree=False, degree=0.1):
         if isDegree:
-            self.brightness = self.brightness + degree
+            self.pixels = [pixel + degree for pixel in self.pixels]
         else:
-            self.brightness = brightness
+            self.pixels = [round(pixel * brightness) for pixel in self.pixels]
 
         self.pixels.show()
 
