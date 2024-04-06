@@ -58,7 +58,6 @@ class Notifier():
         self.iterations = 5
 
     def __enter__(self):
-        print(gpio.getmode())
         gpio.setup(self.pins, gpio.OUT)
         gpio.output(self.pins, self.off)
         return self
@@ -94,7 +93,7 @@ class Notifier():
 
     def rejectedReq(self):
         for _ in range(self.iterations):
-            for i in range(len(self.pins)/2 - 1): 
+            for i in range(len(self.pins)/2): 
                 pinL = self.pins[i]
                 pinR = self.pins[-(1 + i)] # Start from right at [-1]
 
@@ -194,7 +193,7 @@ class LedStrip():
         dimColor = tuple(round(x/2) for x in color)
         
         self.pixels.fill(dimColor)
-        for i in range(self.numPixels/2) - 1:
+        for i in range(int(self.numPixels/2)):
             pixelL = self.pixels[i]
             pixelR = self.pixels[-(1 + i)]
             pixelL = color
