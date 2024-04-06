@@ -40,7 +40,6 @@ For reference, I am using camelCase not snake_case simply because I don't like s
 class Notifier():
 
     activeNotifier = None
-    PINS = [11, 12, 13, 16, 15, 14, 29, 22, 31, 32]
     ON = gpio.LOW
     OFF = gpio.HIGH
     
@@ -57,8 +56,13 @@ class Notifier():
         self.iterations = 5
 
     def __enter__(self):
-        if gpio.getmode() != 10:
+        if gpio.getmode() == 11:
+            gpio.setmode(gpio.BCM)
+            self.PINS = [11, 12, 13, 16, 15, 18, 29, 22, 31, 32]
+
+        else:
             gpio.setmode(gpio.BOARD)
+            self.PINS = [17, 18, 27, 23, 22, 24, 5, 25, 6, 12]
 
         gpio.setup(self.PINS, gpio.OUT)
         gpio.output(self.PINS, self.OFF)
@@ -138,6 +142,7 @@ class LedStrip():
 
     def __enter__(self):
         self.pixels = neopixel.NeoPixel(board.D21, self.numPixels, brightness=1, auto_write=False)
+        print(len(self.pixels))
         self.pixels.fill(self.blank)
         self.pixels.show()
         return self
