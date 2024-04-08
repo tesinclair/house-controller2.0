@@ -1,0 +1,3 @@
+-r ./server/requirements.txt
+-r ./server/gpio/requirements.txt
+
