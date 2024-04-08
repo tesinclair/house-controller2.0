@@ -133,9 +133,9 @@ class LedStrip():
         self.pixels = None
         self.delay = delay
         # -=-=-=- All Pixels are RBG not RGB -=-=-=-
-        self.red = (255, 0, 0)
-        self.green = (0, 0, 255)
-        self.blue = (0, 255, 0)
+        self.red = (50, 0, 0)
+        self.green = (0, 0, 50)
+        self.blue = (0, 50, 0)
         self.purple = (211, 240, 50)
         self.blank = (0, 0, 0)
         self.white = (255, 255, 255)
@@ -171,10 +171,12 @@ class LedStrip():
 
     def virginLights(self):
         i = 0
-        while (True):
-            i += 1
+        while True:
        
-            offset = i * 3
+            offset = i
+
+            if (offset % 100) == 0:
+                i = 0
 
             redL = (0 + offset)
             redR = ((self.numPixels//3 + offset) - 1)
@@ -197,10 +199,11 @@ class LedStrip():
                 self.pixels[temp] = self.blue
             self.pixels.show()
             time.sleep(self.delay)
+            i += 1
     
     def nightLights(self, color=None):
         if color == None: 
-            color = tuple([x//20 for x in self.defaultColor])
+            color = tuple([x//100 for x in self.defaultColor])
         self.pixels.fill((0, 0, 0))
         self.pixels.show()
         self.pixels.fill(color)
@@ -218,19 +221,21 @@ class LedStrip():
             self.pixels.show()
             self.pixels.fill(dimColor)
             time.sleep(self.delay)
+
     def collapse(self, color=None):
-        if not color: color = self.defaultColor
-        dimColor = tuple(round(x/2) for x in color)
+        while True:
+            if not color: color = self.defaultColor
+            dimColor = tuple(round(x/2) for x in color)
         
-        self.pixels.fill(dimColor)
-        for i in range(int(self.numPixels/2)):
-            pixelL = self.pixels[i]
-            pixelR = self.pixels[-(1 + i)]
-            pixelL = color
-            pixelR = color
-            self.pixels.show()
             self.pixels.fill(dimColor)
-            time.sleep(self.delay)
+            for i in range(int(self.numPixels/2)):
+                pixelL = self.pixels[i]
+                pixelR = self.pixels[-(1 + i)]
+                pixelL = color
+                pixelR = color
+                self.pixels.show()
+                self.pixels.fill(dimColor)
+                time.sleep(self.delay)
 
 
     def alternate(self, color=None):
