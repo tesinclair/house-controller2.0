@@ -3,6 +3,7 @@ import neopixel
 import RPi.GPIO as gpio
 import time
 import sys
+import threading
 
 sys.path.append("./utils")
 import utils
@@ -132,10 +133,10 @@ class LedStrip():
 
     def __new__(cls, delay=0.2):
         if cls.instance:
-            return cls.instance()
+            return cls.instance
         else:
-            cls.instance = super().__new__(cls, delay)
-            return cls.instance()
+            cls.instance = super().__new__(cls)
+            return cls.instance
 
     def __init__(self, delay=0.2):
         self.numPixels = 100
@@ -143,7 +144,11 @@ class LedStrip():
         self.delay = delay
         self.brightness = 1
         self.queue = []
+        self.kwargs = {}
         self.run = False
+        self.task = False
+        self.worker = threading.Thread(target=self.supervisor)
+        self.worker.start()
         # -=-=-=- All Pixels are RBG not RGB -=-=-=-
         self.red = (255, 0, 0)
         self.green = (0, 0, 255)
@@ -154,7 +159,7 @@ class LedStrip():
         self.defaultColor = self.purple
 
     def __enter__(self):
-        self.pixels = neopixel.NeoPixel(board.D18, self.numPixels, self.brightness=1, auto_write=False)
+        self.pixels = neopixel.NeoPixel(board.D18, self.numPixels, brightness=1, auto_write=False)
         self.pixels.fill(self.blank)
         self.pixels.show()
         return self
@@ -177,10 +182,16 @@ class LedStrip():
         self.pixels.show()
         self.pixels.deinit()
 
-    async def handleProgram(self, func, color=None):
-        self.run = False
+    def supervisor(self):
+        while True:
+            if len(self.queue) > 0:
+                self.run = False
 
+            time.sleep(0.1)
+
+    def handleFunc(self, func, color=None):
         if func == "stop":
+            self.run = False
             return;
 
         match func:
@@ -202,17 +213,19 @@ class LedStrip():
             case "alternate":
                 self.queue.append(self.alternate)
 
-    async def next(self):
+        if not self.task:
+             self.next()
+
+    def next(self):
         if self.run == True:
             raise ValueError("Huhhhh???")
 
-        if len(self.queue) <= 0:
-            return;
-
+        task = self.queue.pop(0)
         self.run = True
-        await self.queue.pop(0)()
+        self.task = True
+        task()
 
-    async def light(self, color=None):
+    def light(self, color=None):
         if not color: color = self.white
         self.pixels.fill(tuple([x*self.brightness for x in self.white]))
         self.pixels.show()
@@ -220,9 +233,10 @@ class LedStrip():
         while self.run:
             pass
 
+        self.task = False
         self.next()
 
-    async def virginLights(self):
+    def virginLights(self):
         i = 0
         while self.run:
        
@@ -250,10 +264,11 @@ class LedStrip():
             self.pixels.show()
             time.sleep(self.delay)
             i += 1
-
+        
+        self.task = False
         self.next()
-    
-    async def nightLight(self, color=None):
+
+    def nightLight(self, color=None):
         if not color: color = self.defaultColor 
         color = tuple([x*self.brightness for x in color])
 
@@ -265,9 +280,10 @@ class LedStrip():
         while self.run:
             pass
 
+        self.task = False
         self.next()
 
-    async def flow(self, color=None):
+    def flow(self, color=None):
         while self.run:
             if not color: color = self.defaultColor # Generally I hate inline if statements, but this is fine
             color = tuple([x*self.brightness for x in color])
@@ -282,9 +298,10 @@ class LedStrip():
                 self.pixels.fill(dimColor)
                 time.sleep(self.delay)
 
+        self.task = False
         self.next()
 
-    async def collapse(self, color=None):
+    def collapse(self, color=None):
         while self.run:
             if not color: color = self.defaultColor
             color = tuple([x*self.brightness for x in color])
@@ -301,9 +318,10 @@ class LedStrip():
                 self.pixels.fill(dimColor)
                 time.sleep(self.delay)
 
+        self.task = False
         self.next()
 
-    async def alternate(self, color=None):
+    def alternate(self, color=None):
         while self.run:
             if not color: color = self.defaultColor
             color = tuple([x*self.brightness for x in color])
@@ -326,15 +344,22 @@ class LedStrip():
             time.sleep(self.delay)
             self.pixels.show()
 
+        self.task = False
         self.next()
 
-    async def setBrightness(self, brightness=1):
-        self.brightness = self.brightness
+    def setBrightness(self, brightness=1):
+        self.brightness = brightness
 
-if __name__ == "__main__":
+def main():
     with LedStrip() as led:
+        led.setBrightness(brightness = 0.05)
         try:
-            await led.virginLights()
+            led.handleFunc("light")
         except KeyboardInterrupt:
             print("Ending")
+
+
+if __name__ == "__main__":
+    main()
+
 
