@@ -133,9 +133,9 @@ class LedStrip():
         self.pixels = None
         self.delay = delay
         # -=-=-=- All Pixels are RBG not RGB -=-=-=-
-        self.red = (50, 0, 0)
-        self.green = (0, 0, 50)
-        self.blue = (0, 50, 0)
+        self.red = (255, 0, 0)
+        self.green = (0, 0, 255)
+        self.blue = (0, 255, 0)
         self.purple = (211, 240, 50)
         self.blank = (0, 0, 0)
         self.white = (255, 255, 255)
@@ -173,10 +173,7 @@ class LedStrip():
         i = 0
         while True:
        
-            offset = i
-
-            if (offset % 100) == 0:
-                i = 0
+            offset = i*3
 
             redL = (0 + offset)
             redR = ((self.numPixels//3 + offset) - 1)
@@ -185,25 +182,25 @@ class LedStrip():
             blueL = ((self.numPixels * 2)//3 + offset)
             blueR = ((self.numPixels + offset) - 1)
 
-            for i in range(redL, redR):
-                temp = i
+            for j in range(redL, redR):
+                temp = j
                 temp = temp % 100
                 self.pixels[temp] = self.red
-            for i in range(greenL, greenR):
-                temp = i
+            for j in range(greenL, greenR):
+                temp = j
                 temp = temp % 100
                 self.pixels[temp] = self.green
-            for i in range(blueL, blueR):
-                temp = i
+            for j in range(blueL, blueR):
+                temp = j
                 temp = temp % 100
                 self.pixels[temp] = self.blue
             self.pixels.show()
             time.sleep(self.delay)
             i += 1
     
-    def nightLights(self, color=None):
+    def nightLights(self, damp=100, color=None):
         if color == None: 
-            color = tuple([x//100 for x in self.defaultColor])
+            color = tuple([x//damp for x in self.defaultColor])
         self.pixels.fill((0, 0, 0))
         self.pixels.show()
         self.pixels.fill(color)
@@ -272,7 +269,7 @@ class LedStrip():
 if __name__ == "__main__":
     with LedStrip() as led:
         try:
-            led.nightLights()
+            led.virginLights()
         except KeyboardInterrupt:
             print("Ending")
 
