@@ -1,1 +1,1 @@
-from gpio import LedStrip
+import gpio

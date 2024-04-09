@@ -352,7 +352,7 @@ class LedStrip():
 
 def main():
     with LedStrip() as led:
-        led.setBrightness(brightness = 0.05)
+        led.setBrightness(brightness = 0.01)
         try:
             led.handleFunc("light")
         except KeyboardInterrupt:
