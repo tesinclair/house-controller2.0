@@ -147,6 +147,8 @@ class LedStrip():
         self.task = False
         self.worker = threading.Thread(target=self.supervisor)
         self.worker.start()
+
+        self.lock = threading.Lock()
         self.pixels = None
 
         # -=-=-=- All Pixels are RBG not RGB -=-=-=-
@@ -160,9 +162,10 @@ class LedStrip():
         self.defaultColor = self.purple
 
     def __enter__(self):
-        self.pixels = neopixel.NeoPixel(board.D18, self.numPixels)
-        self.pixels.fill(self.blank)
-        self.pixels.show()
+        with self.lock:
+            self.pixels = neopixel.NeoPixel(board.D18, self.numPixels)
+            self.pixels.fill(self.blank)
+            self.pixels.show()
         return self
 
     def __exit__(self, exType, exVal, traceback):
@@ -179,20 +182,22 @@ class LedStrip():
                 with Notifier.getActveNotifier() as err:
                     err.error()
 
-        self.pixels.fill(self.blank)
-        self.pixels.show()
-        self.pixels.deinit()
+        with self.lock:
+            self.pixels.fill(self.blank)
+            self.pixels.show()
+            self.pixels.deinit()
 
     def supervisor(self):
-        while True:
-            if len(self.queue) > 0:
-                self.run = False
+        with self.lock:
+            while True:
+                if len(self.queue) > 0:
+                    self.run = False
 
-            time.sleep(0.1)
+                time.sleep(0.1)
 
-            if not self.task and len(self.queue) > 0:
-                print(self.pixels)
-                self.next()
+                if not self.task and len(self.queue) > 0:
+                    print(self.pixels)
+                    self.next()
 
     def handleFunc(self, func, color=None):
         if func == "stop":
