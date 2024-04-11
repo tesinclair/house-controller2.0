@@ -190,7 +190,6 @@ class LedStrip():
             time.sleep(0.1)
 
             if not self.task and len(self.queue) > 0:
-                self.run = True
                 self.next()
 
     def handleFunc(self, func, color=None):
