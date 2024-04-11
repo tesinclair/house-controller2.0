@@ -63,15 +63,15 @@ async def getFlow(func: str, color: tuple = None):
         return HTTPException(status_code=400, detail=f"Not an allowed function: {func}")
 
     with LedStrip() as led:
-        err = await led.handleFunc(func, color)
+        led.handleFunc(func, color)
 
-        return check(err)
+        return RedirectResponse("/")
 
 @app.get("/brightness")
 async def setBrightness(brightness: float = None):
     with LedStrip() as led:
-        err = await led.setBrightness(brightness) if brightness else led.setBrightness()
+        led.setBrightness(brightness) if brightness else led.setBrightness()
         
-        return check(err)
+        return RedirectResponse("/")
 
 

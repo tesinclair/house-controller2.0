@@ -140,16 +140,17 @@ class LedStrip():
 
     def __init__(self, delay=0.2):
         self.numPixels = 100
-        self.pixels = None
         self.delay = delay
         self.brightness = 1
         self.queue = []
-        self.kwargs = {}
         self.run = False
         self.task = False
         self.worker = threading.Thread(target=self.supervisor)
         self.worker.start()
+        self.pixels = None
+
         # -=-=-=- All Pixels are RBG not RGB -=-=-=-
+
         self.red = (255, 0, 0)
         self.green = (0, 0, 255)
         self.blue = (0, 255, 0)
@@ -159,7 +160,7 @@ class LedStrip():
         self.defaultColor = self.purple
 
     def __enter__(self):
-        self.pixels = neopixel.NeoPixel(board.D18, self.numPixels, brightness=1, auto_write=False)
+        self.pixels = neopixel.NeoPixel(board.D18, self.numPixels)
         self.pixels.fill(self.blank)
         self.pixels.show()
         return self
@@ -227,14 +228,14 @@ class LedStrip():
 
     def light(self, color=None):
         if not color: color = self.white
-        self.pixels.fill(tuple([x*self.brightness for x in self.white]))
+        self.pixels.fill(tuple(round(x*self.brightness) for x in self.white))
+        breakpoint()
         self.pixels.show()
 
         while self.run:
             pass
 
         self.task = False
-        self.next()
 
     def virginLights(self):
         i = 0
@@ -266,7 +267,6 @@ class LedStrip():
             i += 1
         
         self.task = False
-        self.next()
 
     def nightLight(self, color=None):
         if not color: color = self.defaultColor 
@@ -281,7 +281,6 @@ class LedStrip():
             pass
 
         self.task = False
-        self.next()
 
     def flow(self, color=None):
         while self.run:
@@ -299,7 +298,6 @@ class LedStrip():
                 time.sleep(self.delay)
 
         self.task = False
-        self.next()
 
     def collapse(self, color=None):
         while self.run:
@@ -319,7 +317,6 @@ class LedStrip():
                 time.sleep(self.delay)
 
         self.task = False
-        self.next()
 
     def alternate(self, color=None):
         while self.run:
@@ -345,7 +342,6 @@ class LedStrip():
             self.pixels.show()
 
         self.task = False
-        self.next()
 
     def setBrightness(self, brightness=1):
         self.brightness = brightness
