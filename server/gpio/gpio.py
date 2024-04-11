@@ -196,7 +196,6 @@ class LedStrip():
                 time.sleep(0.1)
 
                 if not self.task and len(self.queue) > 0:
-                    print(self.pixels)
                     self.next()
 
     def handleFunc(self, func, color=None):
@@ -234,6 +233,7 @@ class LedStrip():
 
     def light(self, color=None):
         if not color: color = self.white
+        print(self.pixels)
         self.pixels.fill(tuple(round(x*self.brightness) for x in self.white))
         print(self.pixels)
         self.pixels.show()
