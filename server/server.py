@@ -64,6 +64,7 @@ async def getFlow(func: str, color: tuple = None):
 
     with LedStrip() as led:
         led.handleFunc(func, color)
+        print("here")
 
         return RedirectResponse("/")
 

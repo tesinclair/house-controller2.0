@@ -130,6 +130,7 @@ class Notifier():
                     
 class LedStrip():
     instance=None
+    lock = threading.Lock()
 
     def __new__(cls, delay=0.2):
         if cls.instance:
@@ -148,7 +149,6 @@ class LedStrip():
         self.worker = threading.Thread(target=self.supervisor)
         self.worker.start()
 
-        self.lock = threading.Lock()
         self.pixels = None
 
         # -=-=-=- All Pixels are RBG not RGB -=-=-=-
@@ -188,8 +188,8 @@ class LedStrip():
             self.pixels.deinit()
 
     def supervisor(self):
-        with self.lock:
-            while True:
+        while True:
+            with self.lock:
                 if len(self.queue) > 0:
                     self.run = False
 
