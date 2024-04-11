@@ -189,6 +189,10 @@ class LedStrip():
 
             time.sleep(0.1)
 
+            if not self.task and self.queue > 0:
+                self.run = True
+                self.next()
+
     def handleFunc(self, func, color=None):
         if func == "stop":
             self.run = False
@@ -212,9 +216,6 @@ class LedStrip():
 
             case "alternate":
                 self.queue.append(self.alternate)
-
-        if not self.task:
-             self.next()
 
     def next(self):
         if self.run == True:
