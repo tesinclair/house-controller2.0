@@ -229,7 +229,7 @@ class LedStrip():
     def light(self, color=None):
         if not color: color = self.white
         self.pixels.fill(tuple(round(x*self.brightness) for x in self.white))
-        breakpoint()
+        print(self.pixels)
         self.pixels.show()
 
         while self.run:
