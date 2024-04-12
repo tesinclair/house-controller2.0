@@ -131,6 +131,7 @@ class Notifier():
                     
 class LedStrip():
     instance=None
+    threadLock = threading.Lock()
 
     def __new__(cls, delay=0.2):
         if cls.instance:
@@ -144,10 +145,12 @@ class LedStrip():
         self.delay = delay
         self.brightness = 1
         self.queue = queue.Queue()
-        self.run = False
-        self.task = False
-        self.worker = threading.Thread(target=self.supervisor)
-        self.worker.start()
+        self.supervisorWorker = threading.Thread(target=self.supervisor)
+        self.supervisorWorker.start()
+        self.worker = None
+
+        self.running = False
+        self.hasActiveTask = False
 
         self.pixels = None
 
@@ -188,16 +191,19 @@ class LedStrip():
     def supervisor(self):
         while True:
             if len(self.queue) > 0:
-                self.run = False
+                with self.threadLock:
+                    self.running = False
 
             time.sleep(0.1)
+            with self.threadLock:
+                if not self.hasActiveTask and len(self.queue) > 0:
+                    self.worker = threading.Thread(target=self.next)
+                    self.worker.start()
 
-            if not self.task and len(self.queue) > 0:
-                self.next()
-
-    def handleFunc(self, func, color=None):
+    def handler(self, func, color=None):
         if func == "stop":
-            self.run = False
+            with self.threadLock:
+                self.running = False
             return;
 
         match func:
@@ -220,13 +226,16 @@ class LedStrip():
                 self.queue.put(self.alternate)
 
     def next(self):
-        if self.run == True:
-            raise ValueError("Huhhhh???")
+        with self.threadLock:
+            if self.running == True:
+                raise ValueError("Huhhhh???")
 
-        task = self.queue.get()
-        self.run = True
-        self.task = True
-        task()
+            task = self.queue.get()
+            self.running = True
+            self.hasActiveTask = True
+            while self.running:
+                task()
+            self.hasActiveTask = False
 
     def light(self, color=None):
         if not color: color = self.white
@@ -235,41 +244,28 @@ class LedStrip():
         print(self.pixels)
         self.pixels.show()
 
-        while self.run:
-            pass
+    def virginLights(self, offset):
+        redL = (0 + offset)
+        redR = ((self.numPixels//3 + offset) - 1)
+        greenL = (self.numPixels//3 + offset)
+        greenR = (((self.numPixels * 2)//3 + offset) - 1)
+        blueL = ((self.numPixels * 2)//3 + offset)
+        blueR = ((self.numPixels + offset) - 1)
 
-        self.task = False
-
-    def virginLights(self):
-        i = 0
-        while self.run:
-       
-            offset = i*4
-
-            redL = (0 + offset)
-            redR = ((self.numPixels//3 + offset) - 1)
-            greenL = (self.numPixels//3 + offset)
-            greenR = (((self.numPixels * 2)//3 + offset) - 1)
-            blueL = ((self.numPixels * 2)//3 + offset)
-            blueR = ((self.numPixels + offset) - 1)
-
-            for j in range(redL, redR):
-                temp = j
-                temp = temp % 100
-                self.pixels[temp] = tuple([round(x*self.brightness) for x in self.red])
-            for j in range(greenL, greenR):
-                temp = j
-                temp = temp % 100
-                self.pixels[temp] = tuple([round(x*self.brightness) for x in self.green])
-            for j in range(blueL, blueR):
-                temp = j
-                temp = temp % 100
-                self.pixels[temp] = tuple([round(x*self.brightness) for x in self.blue])
-            self.pixels.show()
-            time.sleep(self.delay)
-            i += 1
-        
-        self.task = False
+        for j in range(redL, redR):
+            temp = j
+            temp = temp % 100
+            self.pixels[temp] = tuple([round(x*self.brightness) for x in self.red])
+        for j in range(greenL, greenR):
+            temp = j
+            temp = temp % 100
+            self.pixels[temp] = tuple([round(x*self.brightness) for x in self.green])
+        for j in range(blueL, blueR):
+            temp = j
+            temp = temp % 100
+            self.pixels[temp] = tuple([round(x*self.brightness) for x in self.blue])
+        self.pixels.show()
+        time.sleep(self.delay)
 
     def nightLight(self, color=None):
         if not color: color = self.defaultColor 
@@ -280,71 +276,57 @@ class LedStrip():
         self.pixels.fill(color)
         self.pixels.show()
 
-        while self.run:
-            pass
-
-        self.task = False
-
     def flow(self, color=None):
-        while self.run:
-            if not color: color = self.defaultColor # Generally I hate inline if statements, but this is fine
-            color = tuple([round(x*self.brightness) for x in color])
+        if not color: color = self.defaultColor # Generally I hate inline if statements, but this is fine
+        color = tuple([round(x*self.brightness) for x in color])
 
-            dimColor = tuple([x//2 for x in color])
+        dimColor = tuple([x//2 for x in color])
 
+        self.pixels.fill(dimColor)
+
+        for i in range(self.numPixels):
+            self.pixels[i] = color
+            self.pixels.show()
             self.pixels.fill(dimColor)
-
-            for i in range(self.numPixels):
-                self.pixels[i] = color
-                self.pixels.show()
-                self.pixels.fill(dimColor)
-                time.sleep(self.delay)
-
-        self.task = False
+            time.sleep(self.delay)
 
     def collapse(self, color=None):
-        while self.run:
-            if not color: color = self.defaultColor
-            color = tuple([round(x*self.brightness) for x in color])
+        if not color: color = self.defaultColor
+        color = tuple([round(x*self.brightness) for x in color])
 
-            dimColor = tuple([x//2 for x in color])
+        dimColor = tuple([x//2 for x in color])
 
+        self.pixels.fill(dimColor)
+        for i in range(int(self.numPixels/2)):
+            pixelL = self.pixels[i]
+            pixelR = self.pixels[-(1 + i)]
+            pixelL = color
+            pixelR = color
+            self.pixels.show()
             self.pixels.fill(dimColor)
-            for i in range(int(self.numPixels/2)):
-                pixelL = self.pixels[i]
-                pixelR = self.pixels[-(1 + i)]
-                pixelL = color
-                pixelR = color
-                self.pixels.show()
-                self.pixels.fill(dimColor)
-                time.sleep(self.delay)
-
-        self.task = False
+            time.sleep(self.delay)
 
     def alternate(self, color=None):
-        while self.run:
-            if not color: color = self.defaultColor
-            color = tuple([round(x*self.brightness) for x in color])
+        if not color: color = self.defaultColor
+        color = tuple([round(x*self.brightness) for x in color])
 
-            dimColor = tuple([x//2 for x in color])
+        dimColor = tuple([x//2 for x in color])
 
-            for i in range(self.numPixels):
-                if i % 2 == 0:
-                    self.pixels[i] = color
-                else:
-                    self.pixels[i] = dimColor
-            time.sleep(self.delay)
-            self.pixels.show()
+        for i in range(self.numPixels):
+            if i % 2 == 0:
+                self.pixels[i] = color
+            else:
+                self.pixels[i] = dimColor
+        time.sleep(self.delay)
+        self.pixels.show()
 
-            for i in range(self.numPixels):
-                if i % 2 != 0:
-                    self.pixels[i] = color
-                else:
-                    self.pixels[i] = dimColor
-            time.sleep(self.delay)
-            self.pixels.show()
-
-        self.task = False
+        for i in range(self.numPixels):
+            if i % 2 != 0:
+                self.pixels[i] = color
+            else:
+                self.pixels[i] = dimColor
+        time.sleep(self.delay)
+        self.pixels.show()
 
     def setBrightness(self, brightness=1):
         self.brightness = brightness
@@ -353,7 +335,7 @@ def main():
     with LedStrip() as led:
         led.setBrightness(brightness = 0.01)
         try:
-            led.handleFunc("light")
+            led.handler("light")
         except KeyboardInterrupt:
             print("Ending")
 
