@@ -149,6 +149,8 @@ class LedStrip():
         self.worker = None
         self.halt = False
 
+        self.pixels_lock = threading.Lock()
+
         self.running = False
         self.hasActiveTask = False
 
@@ -185,7 +187,8 @@ class LedStrip():
                     err.error()
 
         self.pixels.fill(self.blank)
-        self.pixels.show()
+        with self.pixels_lock:
+            self.pixels.show()
         self.pixels.deinit()
 
     def supervisor(self):
@@ -245,7 +248,8 @@ class LedStrip():
     def light(self, color=None):
         if not color: color = self.white
         self.pixels.fill(tuple(round(x*self.brightness) for x in self.white))
-        self.pixels.show()
+        with self.pixels_lock:
+            self.pixels.show()
 
     def virginLights(self, offset):
         redL = (0 + offset)
@@ -267,7 +271,8 @@ class LedStrip():
             temp = j
             temp = temp % 100
             self.pixels[temp] = tuple([round(x*self.brightness) for x in self.blue])
-        self.pixels.show()
+        with self.pixels_lock:
+            self.pixels.show()
         time.sleep(self.delay)
 
     def nightLight(self, color=None):
@@ -275,9 +280,12 @@ class LedStrip():
         color = tuple([round(x*self.brightness) for x in color])
 
         self.pixels.fill((0, 0, 0))
-        self.pixels.show()
+        with self.pixels_lock:
+            self.pixels.show()
         self.pixels.fill(color)
-        self.pixels.show()
+
+        with self.pixels_lock:
+            self.pixels.show()
 
     def flow(self, color=None):
         if not color: color = self.defaultColor # Generally I hate inline if statements, but this is fine
@@ -285,11 +293,13 @@ class LedStrip():
 
         dimColor = tuple([x//2 for x in color])
 
-        self.pixels.fill(dimColor)
+        with self.pixels_lock:
+            self.pixels.fill(dimColor)
 
         for i in range(self.numPixels):
             self.pixels[i] = color
-            self.pixels.show()
+            with self.pixels_lock:
+                self.pixels.show()
             self.pixels.fill(dimColor)
             time.sleep(self.delay)
 
@@ -305,7 +315,8 @@ class LedStrip():
             pixelR = self.pixels[-(1 + i)]
             pixelL = color
             pixelR = color
-            self.pixels.show()
+            with self.pixels_lock:
+                self.pixels.show()
             self.pixels.fill(dimColor)
             time.sleep(self.delay)
 
@@ -321,7 +332,8 @@ class LedStrip():
             else:
                 self.pixels[i] = dimColor
         time.sleep(self.delay)
-        self.pixels.show()
+        with self.pixels_lock:
+            self.pixels.show()
 
         for i in range(self.numPixels):
             if i % 2 != 0:
@@ -329,19 +341,19 @@ class LedStrip():
             else:
                 self.pixels[i] = dimColor
         time.sleep(self.delay)
-        self.pixels.show()
+        with self.pixels_lock:
+            self.pixels.show()
 
     def setBrightness(self, brightness=1):
         self.brightness = brightness
 
 def main():
-    with threading.Lock():
-        with LedStrip() as led:
-            led.setBrightness(brightness = 0.01)
-            try:
-                led.handler("light")
-            except KeyboardInterrupt:
-                print("Ending")
+    with LedStrip() as led:
+        led.setBrightness(brightness = 0.01)
+        try:
+            led.handler("light")
+        except KeyboardInterrupt:
+            print("Ending")
 
 
 if __name__ == "__main__":
