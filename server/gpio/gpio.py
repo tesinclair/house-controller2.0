@@ -131,7 +131,6 @@ class Notifier():
                     
 class LedStrip():
     instance=None
-    threadLock = threading.Lock()
 
     def __new__(cls, delay=0.2):
         if cls.instance:
@@ -148,6 +147,7 @@ class LedStrip():
         self.supervisorWorker = threading.Thread(target=self.supervisor)
         self.supervisorWorker.start()
         self.worker = None
+        self.halt = False
 
         self.running = False
         self.hasActiveTask = False
@@ -190,20 +190,20 @@ class LedStrip():
 
     def supervisor(self):
         while True:
-            if len(self.queue) > 0:
-                with self.threadLock:
-                    self.running = False
+            if not self.queue.empty():
+                self.running = False
 
             time.sleep(0.1)
-            with self.threadLock:
-                if not self.hasActiveTask and len(self.queue) > 0:
-                    self.worker = threading.Thread(target=self.next)
-                    self.worker.start()
+            if not self.hasActiveTask and not self.queue.empty():
+                self.worker = threading.Thread(target=self.next)
+                self.worker.start()
+
+            if self.halt:
+                break
 
     def handler(self, func, color=None):
         if func == "stop":
-            with self.threadLock:
-                self.running = False
+            self.running = False
             return;
 
         match func:
@@ -226,22 +226,25 @@ class LedStrip():
                 self.queue.put(self.alternate)
 
     def next(self):
-        with self.threadLock:
-            if self.running == True:
-                raise ValueError("Huhhhh???")
+        if self.running == True:
+            raise ValueError("Huhhhh???")
 
-            task = self.queue.get()
-            self.running = True
-            self.hasActiveTask = True
-            while self.running:
-                task()
-            self.hasActiveTask = False
+        task = self.queue.get()
+        self.running = True
+        self.hasActiveTask = True
+        try:
+            task()
+            while True:
+                pass
+        except KeyboardInterrupt:
+            self.halt = True
+            print("Exiting")
+
+        self.hasActiveTask = False
 
     def light(self, color=None):
         if not color: color = self.white
-        print(self.pixels)
         self.pixels.fill(tuple(round(x*self.brightness) for x in self.white))
-        print(self.pixels)
         self.pixels.show()
 
     def virginLights(self, offset):
@@ -332,12 +335,13 @@ class LedStrip():
         self.brightness = brightness
 
 def main():
-    with LedStrip() as led:
-        led.setBrightness(brightness = 0.01)
-        try:
-            led.handler("light")
-        except KeyboardInterrupt:
-            print("Ending")
+    with threading.Lock():
+        with LedStrip() as led:
+            led.setBrightness(brightness = 0.01)
+            try:
+                led.handler("light")
+            except KeyboardInterrupt:
+                print("Ending")
 
 
 if __name__ == "__main__":
