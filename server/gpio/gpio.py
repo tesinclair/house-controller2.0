@@ -131,6 +131,7 @@ class Notifier():
                     
 class LedStrip():
     instance=None
+    pixelsLock = threading.Lock()
 
     def __new__(cls, delay=0.2):
         if cls.instance:
@@ -149,8 +150,6 @@ class LedStrip():
         self.worker = None
         self.halt = False
 
-        self.pixels_lock = threading.Lock()
-
         self.running = False
         self.hasActiveTask = False
 
@@ -167,9 +166,10 @@ class LedStrip():
         self.defaultColor = self.purple
 
     def __enter__(self):
-        self.pixels = neopixel.NeoPixel(board.D18, self.numPixels)
-        self.pixels.fill(self.blank)
-        self.pixels.show()
+        with self.pixelsLock:
+            self.pixels = neopixel.NeoPixel(board.D18, self.numPixels)
+            self.pixels.fill(self.blank)
+            self.pixels.show()
         return self
 
     def __exit__(self, exType, exVal, traceback):
@@ -186,10 +186,10 @@ class LedStrip():
                 with Notifier.getActveNotifier() as err:
                     err.error()
 
-        self.pixels.fill(self.blank)
-        with self.pixels_lock:
+        with self.pixelsLock:
+            self.pixels.fill(self.blank)
             self.pixels.show()
-        self.pixels.deinit()
+            self.pixels.deinit()
 
     def supervisor(self):
         while True:
@@ -248,7 +248,7 @@ class LedStrip():
     def light(self, color=None):
         if not color: color = self.white
         self.pixels.fill(tuple(round(x*self.brightness) for x in self.white))
-        with self.pixels_lock:
+        with self.pixelsLock:
             self.pixels.show()
 
     def virginLights(self, offset):
@@ -271,7 +271,7 @@ class LedStrip():
             temp = j
             temp = temp % 100
             self.pixels[temp] = tuple([round(x*self.brightness) for x in self.blue])
-        with self.pixels_lock:
+        with self.pixelsLock:
             self.pixels.show()
         time.sleep(self.delay)
 
@@ -280,11 +280,11 @@ class LedStrip():
         color = tuple([round(x*self.brightness) for x in color])
 
         self.pixels.fill((0, 0, 0))
-        with self.pixels_lock:
+        with self.pixelsLock:
             self.pixels.show()
         self.pixels.fill(color)
 
-        with self.pixels_lock:
+        with self.pixelsLock:
             self.pixels.show()
 
     def flow(self, color=None):
@@ -293,12 +293,12 @@ class LedStrip():
 
         dimColor = tuple([x//2 for x in color])
 
-        with self.pixels_lock:
+        with self.pixelsLock:
             self.pixels.fill(dimColor)
 
         for i in range(self.numPixels):
             self.pixels[i] = color
-            with self.pixels_lock:
+            with self.pixelsLock:
                 self.pixels.show()
             self.pixels.fill(dimColor)
             time.sleep(self.delay)
@@ -315,7 +315,7 @@ class LedStrip():
             pixelR = self.pixels[-(1 + i)]
             pixelL = color
             pixelR = color
-            with self.pixels_lock:
+            with self.pixelsLock:
                 self.pixels.show()
             self.pixels.fill(dimColor)
             time.sleep(self.delay)
@@ -332,7 +332,7 @@ class LedStrip():
             else:
                 self.pixels[i] = dimColor
         time.sleep(self.delay)
-        with self.pixels_lock:
+        with self.pixelsLock:
             self.pixels.show()
 
         for i in range(self.numPixels):
@@ -341,7 +341,7 @@ class LedStrip():
             else:
                 self.pixels[i] = dimColor
         time.sleep(self.delay)
-        with self.pixels_lock:
+        with self.pixelsLock:
             self.pixels.show()
 
     def setBrightness(self, brightness=1):
@@ -349,9 +349,11 @@ class LedStrip():
 
 def main():
     with LedStrip() as led:
-        led.setBrightness(brightness = 0.01)
+        led.setBrightness(brightness = 0.005)
         try:
-            led.handler("light")
+            led.light()
+            while True:
+                pass
         except KeyboardInterrupt:
             print("Ending")
 
