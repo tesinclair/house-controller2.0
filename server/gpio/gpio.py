@@ -338,10 +338,10 @@ async def main(q):
 
                 allowedFunctions = ["flow", "alternate", "collapse", "nightLight", "virginLights", "light", "stop", "quit"]
                 if data not in allowedFunctions:
-                    conn.send("BAD REQUEST")
+                    conn.sendall("BAD REQUEST")
                 else:
                     q.put(data)
-                    conn.send("OK")
+                    conn.sendall("OK")
 
 if __name__ == "__main__":
     queue = queue.Queue()
@@ -352,6 +352,7 @@ if __name__ == "__main__":
         # Start the Event Loop
         with LedStrip(queue) as led:
             led.next()
+
     except KeyboardInterrupt:
         print("Exiting")
 

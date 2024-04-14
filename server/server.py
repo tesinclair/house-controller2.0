@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request, Depends, HTTPException, Response
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from gpio.gpio import LedStrip
+import socket
 
 # ERROR HANDLING
 
@@ -62,11 +62,19 @@ async def getFlow(func: str, color: tuple = None):
     if func not in allowed_functions:
         return HTTPException(status_code=400, detail=f"Not an allowed function: {func}")
 
-    with LedStrip() as led:
-        led.handleFunc(func, color)
-        print("here")
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.connect(("127.0.0.1", 7777))
+        s.sendall(func)
 
-        return RedirectResponse("/")
+        data = s.recv(1024)
+
+        print(f"[CLIENT]: {data}")
+
+        if data == "OK":
+            return RedirectResponse("/")
+
+        else:
+            return HTTPException(status_code=400, detail=f"{data}")
 
 @app.get("/brightness")
 async def setBrightness(brightness: float = None):
