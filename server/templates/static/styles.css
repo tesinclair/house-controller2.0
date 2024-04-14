@@ -1,15 +1,42 @@
-.buttons{
-	display: grid;
-	gap: 3rem;
-	grid-template-columns: repeat(2, 1fr);
-	place-items: center;
-	place-content: center;
+
+@media screen and (max-width: 600px){
+	.buttons{
+		display: flex;
+		gap: 3em;
+		flex-direction: column;
+		place-items: center;
+		place-content: center;
+	}
+}
+
+body{
+	background-color: black;
+	
+	*{
+		color: lightgrey;
+	}
+}
+
+h1{
+	text-align:center;
+}
+
+@media screen and (min-width: 601px){
+
+
+	.buttons{
+		display: grid;
+		gap: 3rem;
+		grid-template-columns: repeat(2, 11em);
+		place-items: center;
+		place-content: center;
+	}
 }
 .btn{
-	color: white;
-	background-color: black;
+	background-color: rgb(100, 100, 100);
 	height: 4rem;
 	width: 10em;
+	border-radius: 2em;
 }
 
 .brightness{
@@ -19,9 +46,29 @@
 	cursor: pointer;
 	width: 15rem;
 }
-.brightness::-webkit-slider-runnable-track,
-.brightness::-moz-range-track{
-	background: black;
+.brightness::-webkit-slider-runnable-track{
+	background: rgb(100, 100, 100);
 	height: 0.5rem;
-	border-radius: 50%;
+	border-radius: 5em;
+}
+.brightness::-moz-range-track{
+	background: rgb(100, 100, 100);
+	height: 0.5rem;
+	border-radius: 5em;
+}
+.brightness::-moz-range-thumb{
+	border: none;
+	height: 1.5em;
+	width: 1.5em;
+	border-radius: 30%;
+	background-color: lightgrey;
+}
+.brightness::-webkit-slider-thumb{
+	-webkit-appearance: none;
+	border: none;
+	height: 1.5em;
+	width: 1.5em;
+	border-radius: 30%;
+	margin-top: -.3em;
+	background-color: lightgrey;
 }

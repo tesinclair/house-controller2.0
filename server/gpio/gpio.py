@@ -207,7 +207,10 @@ class LedStrip():
                     return None
 
         elif code == "brightness":
-            self.setBrightness(float(arg))
+            arg = float(arg)
+            if arg == 0:
+                arg = 0.01
+            self.setBrightness(arg)
             func()
 
     def light(self, color=None):
@@ -333,7 +336,7 @@ class LedStrip():
         self.next(self.wait)
 
     def setBrightness(self, brightness):
-        self.brightness = float(brightness)
+        self.brightness = brightness
 
 def main(q):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
