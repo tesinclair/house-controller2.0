@@ -3,21 +3,25 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="static/styles.css" rel="stylesheet">
+        <link href="templates/static/styles.css" rel="stylesheet">
+	<script src="templates/static/main.js" type="text/javascript" defer></script>
         <title> Lights Mothafucker </title>
     </head>
-    <body>
+    <body onload="onLoad()">
         <!-- What the royal fuck are you looking at -->
         <h1> Lights Mothafucker </h1>
 
-        <section class="buttons"
-            <button type="button" class="btn"><a href="/program?func=alternate"> Alternate </a></button>
-            <button type="button" class="btn"><a href="/program?func=flow"> Flow </a></button>
-            <button type="button" class="btn"><a href="/program?func=collapse"> Collapse </a></button>
-            <button type="button" class="btn"><a href="/program?func=nightLight"> Night Light </a></button>
-            <button type="button" class="btn"><a href="/program?func=virginLights"> Virgin Lights </a></button>
-            <button type="button" class="btn"><a href="/program?func=light"> Lights </a></button>
-            <input type="range" min="0" max="1" value="0.8" class="brightness">
+	<section class="buttons">
+	    <a href="/program?func=stop"><button type="button" class="btn">Wait</button></a>
+	    <a href="/program?func=alternate"><button type="button" class="btn">Alternate</button></a>
+	    <a href="/program?func=flow"><button type="button" class="btn">Flow</button></a>
+	    <a href="/program?func=collapse"><button type="button" class="btn">Collapse</button></a>
+	    <a href="/program?func=nightLight"><button type="button" class="btn">Night Lights</button></a>
+	    <a href="/program?func=virginLights"><button type="button" class="btn">Virgin Lights</button></a>
+	    <a href="/program?func=light"><button type="button" class="btn">Lights</button></a>
+	    <a href="/program?func=quit"><button type="button" class="btn">Quit</button></a>
+            <input type="range" min="0" max="100" value="100" class="brightness">
+	    <button type="button" class="brightnessBtn btn">Set Brightness</button>
         </section>
     </body>
 </html>

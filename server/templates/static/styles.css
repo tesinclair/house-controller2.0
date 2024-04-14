@@ -1,0 +1,27 @@
+.buttons{
+	display: grid;
+	gap: 3rem;
+	grid-template-columns: repeat(2, 1fr);
+	place-items: center;
+	place-content: center;
+}
+.btn{
+	color: white;
+	background-color: black;
+	height: 4rem;
+	width: 10em;
+}
+
+.brightness{
+	-webkit-appearance: none;
+	appearance: none;
+	background: transparent;
+	cursor: pointer;
+	width: 15rem;
+}
+.brightness::-webkit-slider-runnable-track,
+.brightness::-moz-range-track{
+	background: black;
+	height: 0.5rem;
+	border-radius: 50%;
+}

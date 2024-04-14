@@ -5,7 +5,7 @@ import time
 import sys
 import queue
 import socket
-import asyncio
+import threading
 
 sys.path.append("./utils")
 import utils
@@ -140,7 +140,7 @@ class LedStrip():
             cls.instance = super().__new__(cls)
             return cls.instance
 
-    def __init__(self, delay=0.2):
+    def __init__(self, q, delay=0.2):
         self.numPixels = 100
         self.delay = delay
         self.brightness = 1
@@ -184,25 +184,31 @@ class LedStrip():
     def check(self):
         return self.queue.empty()
 
-    def next(self):
-        task = self.queue.get()
-        match task:
-            case "flow":
-                self.flow()
-            case "alternate":
-                self.alternate()
-            case "virginLights":
-                self.virginLights()
-            case "collapse":
-                self.collapse()
-            case "nightLight":
-                self.nightLight()
-            case "light":
-                self.light()
-            case "stop":
-                self.wait()
-            case "shutdown":
-                return None
+    def next(self, func):
+        code, arg = self.queue.get().split(":")
+            
+        if code == "func":
+            match arg:
+                case "flow":
+                    self.flow()
+                case "alternate":
+                    self.alternate()
+                case "virginLights":
+                    self.virginLights()
+                case "collapse":
+                    self.collapse()
+                case "nightLight":
+                    self.nightLight()
+                case "light":
+                    self.light()
+                case "stop":
+                    self.wait()
+                case "quit":
+                    return None
+
+        elif code == "brightness":
+            self.setBrightness(float(arg))
+            func()
 
     def light(self, color=None):
         if not color: color = self.white
@@ -212,7 +218,7 @@ class LedStrip():
         while self.check():
             pass
 
-        self.next()
+        self.next(self.light)
 
     def virginLights(self):
         i = 0
@@ -241,11 +247,14 @@ class LedStrip():
             self.pixels.show()
             time.sleep(self.delay)
 
-        self.next()
+            i += 1
+
+        self.next(self.virginLights)
 
     def nightLight(self, color=None):
         if not color: color = self.defaultColor 
-        color = tuple([round(x*self.brightness) for x in color])
+
+        color = tuple(round(x * self.brightness) for x in color)
 
         self.pixels.fill((0, 0, 0))
         self.pixels.show()
@@ -255,7 +264,7 @@ class LedStrip():
         while self.check():
             pass
 
-        self.next()
+        self.next(self.nightLight)
 
     def flow(self, color=None):
         if not color: color = self.defaultColor # Generally I hate inline if statements, but this is fine
@@ -270,7 +279,7 @@ class LedStrip():
                 self.pixels.fill(self.blank)
                 time.sleep(self.delay)
 
-        self.next()
+        self.next(self.flow)
 
     def collapse(self, color=None):
         if not color: color = self.defaultColor
@@ -288,7 +297,7 @@ class LedStrip():
                 self.pixels.fill(self.blank)
                 time.sleep(self.delay)
 
-        self.next()
+        self.next(self.collapse)
 
     def alternate(self, color=None):
         if not color: color = self.defaultColor
@@ -312,46 +321,55 @@ class LedStrip():
             time.sleep(self.delay)
             self.pixels.show()
 
-        self.next()
+        self.next(self.alternate)
 
-    def setBrightness(self, brightness=1):
-        self.brightness = brightness
+    def wait(self):
+        self.pixels.fill(self.blank)
+        self.pixels.show()
 
-async def main(q):
+        while self.check():
+            pass
+
+        self.next(self.wait)
+
+    def setBrightness(self, brightness):
+        self.brightness = float(brightness)
+
+def main(q):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-        sock.bind("127.0.0.1", 7777)
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        sock.bind(("127.0.0.1", 7777))
         sock.listen(1)
 
         print("[SOCKET] Listening on localhost:7777")
 
-        conn, addr = s.accept()
-        with conn:
-            print(f'[SOCKET][CONNECTION]: {addr}')
+        while True:
+            conn, addr = sock.accept()
+            with conn:
+                print(f'[SOCKET][CONNECTION]: {addr}')
 
-            while True:
                 data = conn.recv(1024)
+                print(f"[SOCKET][{addr}]: {data}")
 
                 if not data:
                     break
 
-                print(f"[SOCKET][{addr}]: {data}")
-
-                allowedFunctions = ["flow", "alternate", "collapse", "nightLight", "virginLights", "light", "stop", "quit"]
-                if data not in allowedFunctions:
-                    conn.sendall("BAD REQUEST")
-                else:
-                    q.put(data)
-                    conn.sendall("OK")
+                data = data.decode('UTF-8')
+                
+                q.put(data)
+                conn.sendall(bytes("OK", 'UTF-8'))
 
 if __name__ == "__main__":
     queue = queue.Queue()
 
     try:
-        asyncio.run(main(queue))
-
+        thread = threading.Thread(target=main, args=[queue])
+        thread.start()
+        
         # Start the Event Loop
         with LedStrip(queue) as led:
-            led.next()
+            led.setBrightness(1);
+            led.next(None)
 
     except KeyboardInterrupt:
         print("Exiting")

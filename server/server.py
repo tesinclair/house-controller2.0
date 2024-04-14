@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request, Depends, HTTPException, Response
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+import uvicorn
 import socket
 
 # ERROR HANDLING
@@ -11,6 +12,36 @@ def check(err: int):
         return HTTPException(status_code=503, detail="There was an error processing the request, please try again")
     else:
         return RedirectResponse("/")
+
+# SOCKETS
+
+def sockCommand(cmd):
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        SOCKADDR = ("127.0.0.1", 7777)
+        sock.connect(SOCKADDR)
+
+        print(f"[SOCKET]: Connected to {sock}")
+
+        try:
+            print(f"[SOCKET]: Sending {cmd} ({bytes(cmd, 'UTF-8')}) to {sock}")
+            sock.sendall(bytes(cmd, 'UTF-8'))
+        except Exception as e:
+            print(f"[SOCKET ERR]: {e}")
+            return -1
+
+        data = sock.recv(1024)
+
+        if not data:
+            return -1
+
+        data = data.decode('UTF-8')
+
+        print(f"[SOCKET]: {data}")
+    
+        if data == "OK":
+            return None
+        else:
+            return 1
 
 # API
 
@@ -56,31 +87,20 @@ async def checkAuth(request: Request, next):
 # ROUTES
 
 @app.get("/program")
-async def getFlow(func: str, color: tuple = None):
-    allowed_functions = ["flow", "alternate", "collapse", "nightLight", "virginLights", "light", "stop"]
+async def getFlow(func: str):
+    allowed_functions = ["flow", "alternate", "collapse", "nightLight", "virginLights", "light", "stop", "quit"]
 
     if func not in allowed_functions:
         return HTTPException(status_code=400, detail=f"Not an allowed function: {func}")
+    
+    err = sockCommand(f"func:{func}")
+    return check(err)
 
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.connect(("127.0.0.1", 7777))
-        s.sendall(func)
-
-        data = s.recv(1024)
-
-        print(f"[CLIENT]: {data}")
-
-        if data == "OK":
-            return RedirectResponse("/")
-
-        else:
-            return HTTPException(status_code=400, detail=f"{data}")
-
-@app.get("/brightness")
+@app.get("/set")
 async def setBrightness(brightness: float = None):
-    with LedStrip() as led:
-        led.setBrightness(brightness) if brightness else led.setBrightness()
-        
-        return RedirectResponse("/")
+    err = sockCommand(f"brightness:{brightness}")
+    return check(err)
 
+if __name__ == "__main__":
+    uvicorn.run("server:app", port=6767, host="0.0.0.0", log_level="info")
 
