@@ -1,0 +1,175 @@
+<mxfile host="app.diagrams.net" modified="2024-04-15T19:06:18.911Z" agent="Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0" etag="HUGHZ-_1RnviXyTjX-pe" version="24.2.5" type="device">
+  <diagram name="Page-1" id="2uKJOeaScqHaaZbZUh0H">
+    <mxGraphModel dx="1434" dy="795" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-1" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="70" width="680" height="520" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-3" value="Presets" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="200" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-5" value="Write" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="260" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-6" value="Custom" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="230" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-7" value="Ai" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="320" y="170" width="210" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-8" value="Home" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="170" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-10" value="Light simulation" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="470" width="470" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-11" value="Audi Visualiser" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="290" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-12" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="610" width="680" height="380" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-13" value="Home" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="680" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-14" value="Presets" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="710" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-15" value="Custom" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="740" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-16" value="Light Sim" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="250" y="880" width="450" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-17" value="Ai" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="610" y="620" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-18" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="670" width="100" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-19" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="720" width="100" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-20" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="405" y="670" width="115" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-21" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="405" y="720" width="115" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-22" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="770" width="100" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-23" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="405" y="770" width="115" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-25" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="290" y="840" width="220" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-26" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="330" y="830" width="30" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-27" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="540" y="835" width="120" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-28" value="Write" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="770" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-29" value="Audio Visualiser" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="800" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-30" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="1020" width="680" height="470" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-31" value="Home&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt; " style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="1090" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-32" value="Presets" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="1120" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-33" value="Custom" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="1150" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-34" value="Write" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="1180" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-35" value="Audio Visualiser" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="1210" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-36" value="Color Wheel" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="355" y="1140" width="155" height="155" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-37" value="Ai" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="1040" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-38" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="271" y="1330" width="286" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-39" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="340" y="1320" width="30" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-40" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="580" y="1315" width="100" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-41" value="Light Sim" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="271" y="1370" width="409" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-42" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="1520" width="680" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-44" value="Home" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="1650" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-45" value="Presets" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="1680" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-46" value="Custom" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="1710" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-47" value="Write" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="1740" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-48" value="Audio Visualiser" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="1770" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-49" value="Ai" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="610" y="1530" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-50" value="Either scripting program, or block based" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="271" y="1560" width="339" height="270" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-51" value="Light Sim" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="1850" width="430" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-52" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="1980" width="680" height="500" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-53" value="Home" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="2070" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-54" value="Presets" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="2100" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-55" value="Custom" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="2130" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-56" value="Write" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="2160" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-57" value="Audio Visualiser" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="2190" width="170" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-58" value="Ai" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="630" y="1990" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-59" value="Audio Visualiser" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="2060" width="400" height="290" as="geometry" />
+        </mxCell>
+        <mxCell id="GCRe6AStjpTsIN8Hz0Ex-60" value="Light Sim" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="2380" width="440" height="70" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
