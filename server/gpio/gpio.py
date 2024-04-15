@@ -158,6 +158,7 @@ class LedStrip():
         self.white = (255, 255, 255)
         self.colors = [self.red, self.blue, self.purple, self.green, self.white]
 
+
     def __enter__(self):
         self.pixels = neopixel.NeoPixel(board.D18, self.numPixels, auto_write=False)
         self.pixels.fill(self.blank)

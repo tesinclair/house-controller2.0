@@ -19,8 +19,10 @@ h1{
 .brightnessBox{
 	display: flex;
 	flex-direction: column;
+	place-items: center;
+	place-content: center;
 	gap: 3em;
-	padding-blcok-end: 5em;
+	padding-block-end: 5em;
 }
 .hide{
 	display: none;
@@ -30,6 +32,24 @@ h1{
 	height: 4rem;
 	width: 10em;
 	border-radius: 2em;
+}
+
+.red{
+	background-color: rgb(200, 80, 80);
+}
+.green{
+	background-color: rgb(80, 200, 80);
+}
+.blue{
+	background-color: rgb(80, 80, 200);
+}
+.white{
+	background-color: rgb(200, 200, 200);
+	color: rgb(100, 100, 100);
+}
+
+.stop{
+	background-color: rgb(160, 80, 80);
 }
 
 .brightness{
