@@ -134,14 +134,14 @@ class Notifier():
 class LedStrip():
     instance=None
 
-    def __new__(cls, q, delay=0.2):
+    def __new__(cls, q, delay=0.001):
         if cls.instance:
             return cls.instance
         else:
             cls.instance = super().__new__(cls)
             return cls.instance
 
-    def __init__(self, q, delay=0.2):
+    def __init__(self, q, delay=0.001):
         self.numPixels = 100
         self.delay = delay
         self.brightness = 1
@@ -156,7 +156,11 @@ class LedStrip():
         self.purple = (211, 240, 50)
         self.blank = (0, 0, 0)
         self.white = (255, 255, 255)
-        self.colors = [self.red, self.blue, self.purple, self.green, self.white]
+        self.palleteA = [(189, 145, 147), (191, 71, 11), (198, 67, 33), (110, 209, 180), (108, 237, 190)]
+        self.palleteB = [(255, 255, 255), (132, 198, 220), (165, 214, 255), (255, 158, 166), (255, 107, 104)]
+        self.palleteC = [(3, 107, 26), (3, 96, 56), (8, 167, 124), (0, 133, 67), (5, 220, 178)]
+        self.palleteD = [(135, 88, 0), (164, 63, 48), (194, 174, 140), (208, 160, 171), (117, 171, 154)]
+        self.colors = [self.palleteA, self.palleteB, self.palleteC, self.palleteD]
 
 
     def __enter__(self):
@@ -186,19 +190,20 @@ class LedStrip():
     def check(self):
         return self.queue.empty()
 
-    def next(self, func, color = None):
+    def next(self, func, color = None, pallete=None):
         code, arg = self.queue.get().split(":")
             
         if code == "func":
+            pallete = random.choice(self.colors)
             match arg:
                 case "flow":
-                    self.flow()
+                    self.flow(pallete)
                 case "alternate":
-                    self.alternate()
+                    self.alternate(pallete)
                 case "virginLights":
                     self.virginLights()
                 case "collapse":
-                    self.collapse()
+                    self.collapse(pallete)
                 case "nightLight":
                     self.light(self.purple)
                 case "light":
@@ -210,11 +215,11 @@ class LedStrip():
                 case "green":
                     self.light(self.green)
                 case "pulse":
-                    self.pulse()
+                    self.pulse(pallete)
                 case "stop":
                     self.wait()
                 case "quit":
-                    return None
+                    return False
 
         elif code == "brightness":
             arg = float(arg)
@@ -224,6 +229,8 @@ class LedStrip():
 
             if color:
                 func(color)
+            elif pallete:
+                func(pallete)
             else:
                 func()
     
@@ -237,24 +244,29 @@ class LedStrip():
 
         self.next(self.light, color)
 
-    def pulse(self, color=None):
+    def pulse(self, pallete):
+        palleteIndex = 0
         while self.check():
-            color = random.choice(self.colors)
+            palleteIndex = palleteIndex % len(pallete)
+            color = pallete[palleteIndex]
+            i = 0
 
-            i = self.brightness
-            while i > 0:
-                self.pixels.fill(tuple(round(x*i) for x in color))
-                self.pixels.show()
-                i -= 0.01
-                time.sleep(0.01)
-            
             while i < self.brightness:
                 self.pixels.fill(tuple(round(x*i) for x in color))
                 self.pixels.show()
                 i += 0.01
-                time.sleep(0.01)
+                time.sleep(self.delay)
+
+            while i > 0:
+                self.pixels.fill(tuple(round(x*i) for x in color))
+                self.pixels.show()
+                i -= 0.01
+                time.sleep(self.delay)
+
+            palleteIndex += 1
+            
         
-        self.next(self.pulse)
+        self.next(self.pulse, pallete=pallete)
 
 
 
@@ -262,7 +274,7 @@ class LedStrip():
         i = 0
         while self.check():
             i = i % 100
-            offset = i * 2
+            offset = i
             redL = (0 + offset)
             redR = ((self.numPixels//3 + offset) - 1)
             greenL = (self.numPixels//3 + offset)
@@ -290,47 +302,50 @@ class LedStrip():
 
         self.next(self.virginLights)
 
-    def flow(self):
+    def flow(self, pallete):
         self.pixels.fill(self.blank)
         i = 0
+        palleteIndex = 0
         while self.check():
-            i = i % 100
-            if i == 0:
-                color = random.choice(self.colors)
-                color = tuple([round(x*self.brightness) for x in color])
-
-            color = random.choice(self.colors)
+            i = i % self.numPixels
+            palleteIndex = palleteIndex % len(pallete)
+            color = pallete[palleteIndex]
             color = tuple([round(x*self.brightness) for x in color])
+
             self.pixels[i] = color
             self.pixels.show()
             self.pixels.fill(self.blank)
             time.sleep(self.delay)
             i += 1
+            palleteIndex += 1
 
-        self.next(self.flow)
+        self.next(self.flow, pallete)
 
-    def collapse(self):
+    def collapse(self, pallete):
         i = 0
+        palleteIndex = 0
         while self.check():
-            i = i % self.numPixels//2
-            color = random.choice(self.colors)
+            i = i % (self.numPixels//2)
+            palleteIndex = palleteIndex % len(pallete)
+            color = pallete[palleteIndex]
             color = tuple([round(x*self.brightness) for x in color])
-            for j in range(i, i+3):
-                pixelL = self.pixels[j]
-                pixelR = self.pixels[-(1 + j)]
-            pixelL = color
-            pixelR = color
+
+            self.pixels[i] = color
+            self.pixels[-(1 + i)] = color
+
             self.pixels.show()
             self.pixels.fill(self.blank)
             time.sleep(self.delay)
-            i += 3
+            i += 1
+            palleteIndex += 1
 
-        self.next(self.collapse)
+        self.next(self.collapse, pallete)
 
-    def alternate(self):
-
+    def alternate(self, pallete):
+        palleteIndex = 0
         while self.check():
-            color = random.choice(self.colors)
+            palleteIndex = palleteIndex % len(pallete)
+            color = pallete[palleteIndex]
             color = tuple([round(x*self.brightness) for x in color])
             for i in range(self.numPixels):
                 if i % 2 == 0:
@@ -345,10 +360,12 @@ class LedStrip():
                     self.pixels[i] = color
                 else:
                     self.pixels[i] = self.blank
-            time.sleep(self.delay)
+            time.sleep(self.delay*10)
             self.pixels.show()
 
-        self.next(self.alternate)
+            palleteIndex += 1
+
+        self.next(self.alternate, pallete)
 
     def wait(self):
         self.pixels.fill(self.blank)
@@ -394,9 +411,13 @@ if __name__ == "__main__":
         thread.start()
         
         # Start the Event Loop
-        with LedStrip(queue) as led:
-            led.setBrightness(1);
-            led.next(None)
+        running = True
+        while running:
+            try:
+                with LedStrip(queue) as led:
+                    running = led.next(None)
+            except Exception as e:
+                print(e)
 
     except KeyboardInterrupt:
         print("Exiting")
