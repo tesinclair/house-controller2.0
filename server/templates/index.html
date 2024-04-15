@@ -11,16 +11,23 @@
         <!-- What the royal fuck are you looking at -->
         <h1> Lights Mothafucker </h1>
 
+        <input type="range" min="0" max="100" value="100" class="brightness">
+	<button type="button" class="brightnessBtn btn">Set Brightness</button>
 	<section class="buttons">
-            <input type="range" min="0" max="100" value="100" class="brightness">
-	    <button type="button" class="brightnessBtn btn">Set Brightness</button>
-	    <a href="/program?func=stop"><button type="button" class="btn">Wait</button></a>
 	    <a href="/program?func=alternate"><button type="button" class="btn">Alternate</button></a>
 	    <a href="/program?func=flow"><button type="button" class="btn">Flow</button></a>
 	    <a href="/program?func=collapse"><button type="button" class="btn">Collapse</button></a>
 	    <a href="/program?func=nightLight"><button type="button" class="btn">Night Lights</button></a>
 	    <a href="/program?func=virginLights"><button type="button" class="btn">Virgin Lights</button></a>
-	    <a href="/program?func=light"><button type="button" class="btn">Lights</button></a>
+	    <a href="/program?func=pulse"><button type="button" class="btn">Pulse</button></a>
+	    <button type="button" class="light btn">Lights</button>
+	    <div class="hide"> 
+	    	<a href="/program?func=red"><button type="button" class="btn">Red</button></a>
+	    	<a href="/program?func=green"><button type="button" class="btn">Green</button></a>
+	    	<a href="/program?func=blue"><button type="button" class="btn">Blue</button></a>
+	    	<a href="/program?func=light"><button type="button" class="btn">White</button></a>
+	    </div>
+	    <a href="/program?func=stop"><button type="button" class="btn">Wait</button></a>
 	    <a href="/program?func=quit"><button type="button" class="btn">Quit</button></a>
         </section>
     </body>

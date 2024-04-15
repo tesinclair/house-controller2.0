@@ -88,7 +88,7 @@ async def checkAuth(request: Request, next):
 
 @app.get("/program")
 async def getFlow(func: str):
-    allowed_functions = ["flow", "alternate", "collapse", "nightLight", "virginLights", "light", "stop", "quit"]
+    allowed_functions = ["flow", "alternate", "collapse", "nightLight", "virginLights", "light", "red", "blue", "green", "pulse", "stop", "quit"]
 
     if func not in allowed_functions:
         return HTTPException(status_code=400, detail=f"Not an allowed function: {func}")

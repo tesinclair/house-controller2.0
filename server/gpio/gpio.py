@@ -6,6 +6,7 @@ import sys
 import queue
 import socket
 import threading
+import random
 
 sys.path.append("./utils")
 import utils
@@ -155,10 +156,10 @@ class LedStrip():
         self.purple = (211, 240, 50)
         self.blank = (0, 0, 0)
         self.white = (255, 255, 255)
-        self.defaultColor = self.purple
+        self.colors = [self.red, self.blue, self.purple, self.green, self.white]
 
     def __enter__(self):
-        self.pixels = neopixel.NeoPixel(board.D18, self.numPixels)
+        self.pixels = neopixel.NeoPixel(board.D18, self.numPixels, auto_write=False)
         self.pixels.fill(self.blank)
         self.pixels.show()
         return self
@@ -184,7 +185,7 @@ class LedStrip():
     def check(self):
         return self.queue.empty()
 
-    def next(self, func):
+    def next(self, func, color = None):
         code, arg = self.queue.get().split(":")
             
         if code == "func":
@@ -198,9 +199,17 @@ class LedStrip():
                 case "collapse":
                     self.collapse()
                 case "nightLight":
-                    self.nightLight()
+                    self.light(self.purple)
                 case "light":
                     self.light()
+                case "red":
+                    self.light(self.red)
+                case "blue":
+                    self.light(self.blue)
+                case "green":
+                    self.light(self.green)
+                case "pulse":
+                    self.pulse()
                 case "stop":
                     self.wait()
                 case "quit":
@@ -209,24 +218,50 @@ class LedStrip():
         elif code == "brightness":
             arg = float(arg)
             if arg == 0:
-                arg = 0.01
+                arg = 0.005
             self.setBrightness(arg)
-            func()
 
+            if color:
+                func(color)
+            else:
+                func()
+    
     def light(self, color=None):
         if not color: color = self.white
-        self.pixels.fill(tuple(round(x*self.brightness) for x in self.white))
+        self.pixels.fill(tuple(round(x*self.brightness) for x in color))
         self.pixels.show()
 
         while self.check():
             pass
 
-        self.next(self.light)
+        self.next(self.light, color)
+
+    def pulse(self, color=None):
+        while self.check():
+            color = random.choice(self.colors)
+
+            i = self.brightness
+            while i > 0:
+                self.pixels.fill(tuple(round(x*i) for x in color))
+                self.pixels.show()
+                i -= 0.01
+                time.sleep(0.01)
+            
+            while i < self.brightness:
+                self.pixels.fill(tuple(round(x*i) for x in color))
+                self.pixels.show()
+                i += 0.01
+                time.sleep(0.01)
+        
+        self.next(self.pulse)
+
+
 
     def virginLights(self):
         i = 0
         while self.check():
-            offset = i * 4
+            i = i % 100
+            offset = i * 2
             redL = (0 + offset)
             redR = ((self.numPixels//3 + offset) - 1)
             greenL = (self.numPixels//3 + offset)
@@ -254,60 +289,48 @@ class LedStrip():
 
         self.next(self.virginLights)
 
-    def nightLight(self, color=None):
-        if not color: color = self.defaultColor 
-
-        color = tuple(round(x * self.brightness) for x in color)
-
-        self.pixels.fill((0, 0, 0))
-        self.pixels.show()
-        self.pixels.fill(color)
-        self.pixels.show()
-
-        while self.check():
-            pass
-
-        self.next(self.nightLight)
-
-    def flow(self, color=None):
-        if not color: color = self.defaultColor # Generally I hate inline if statements, but this is fine
-        color = tuple([round(x*self.brightness) for x in color])
-
+    def flow(self):
         self.pixels.fill(self.blank)
-
+        i = 0
         while self.check():
-            for i in range(self.numPixels):
-                self.pixels[i] = color
-                self.pixels.show()
-                self.pixels.fill(self.blank)
-                time.sleep(self.delay)
+            i = i % 100
+            if i == 0:
+                color = random.choice(self.colors)
+                color = tuple([round(x*self.brightness) for x in color])
+
+            color = random.choice(self.colors)
+            color = tuple([round(x*self.brightness) for x in color])
+            self.pixels[i] = color
+            self.pixels.show()
+            self.pixels.fill(self.blank)
+            time.sleep(self.delay)
+            i += 1
 
         self.next(self.flow)
 
-    def collapse(self, color=None):
-        if not color: color = self.defaultColor
-        color = tuple([round(x*self.brightness) for x in color])
-
-        self.pixels.fill(self.blank)
-
+    def collapse(self):
+        i = 0
         while self.check():
-            for i in range(int(self.numPixels/2)):
-                pixelL = self.pixels[i]
-                pixelR = self.pixels[-(1 + i)]
-                pixelL = color
-                pixelR = color
-                self.pixels.show()
-                self.pixels.fill(self.blank)
-                time.sleep(self.delay)
+            i = i % self.numPixels//2
+            color = random.choice(self.colors)
+            color = tuple([round(x*self.brightness) for x in color])
+            for j in range(i, i+3):
+                pixelL = self.pixels[j]
+                pixelR = self.pixels[-(1 + j)]
+            pixelL = color
+            pixelR = color
+            self.pixels.show()
+            self.pixels.fill(self.blank)
+            time.sleep(self.delay)
+            i += 3
 
         self.next(self.collapse)
 
-    def alternate(self, color=None):
-        if not color: color = self.defaultColor
-        color = tuple([round(x*self.brightness) for x in color])
+    def alternate(self):
 
         while self.check():
-
+            color = random.choice(self.colors)
+            color = tuple([round(x*self.brightness) for x in color])
             for i in range(self.numPixels):
                 if i % 2 == 0:
                     self.pixels[i] = color

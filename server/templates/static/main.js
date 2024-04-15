@@ -18,4 +18,9 @@ brightnessScrollerBtn.addEventListener('click', (e) =>{
 	window.location.href = "/set?brightness=" + brightness;
 });
 
+light = document.querySelector(".light")
 
+light.addEventListener('click', (e) => {
+	hidden = document.querySelector(".hide");
+	hidden.classList.toggle('hide');
+});
