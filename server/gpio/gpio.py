@@ -7,6 +7,7 @@ import queue
 import socket
 import threading
 import random
+import ast
 
 sys.path.append("./utils")
 import utils
@@ -134,14 +135,14 @@ class Notifier():
 class LedStrip():
     instance=None
 
-    def __new__(cls, q, delay=0.001):
+    def __new__(cls, q, delay=0.01):
         if cls.instance:
             return cls.instance
         else:
             cls.instance = super().__new__(cls)
             return cls.instance
 
-    def __init__(self, q, delay=0.001):
+    def __init__(self, q, delay=0.01):
         self.numPixels = 100
         self.delay = delay
         self.brightness = 1
@@ -192,9 +193,13 @@ class LedStrip():
 
     def next(self, func, color = None, pallete=None):
         code, arg = self.queue.get().split(":")
-            
+
         if code == "func":
             pallete = random.choice(self.colors)
+
+            if arg.startswith("colorwheel"):
+                arg, arg1 = arg.split(",")
+                arg1 = ast.literal_eval(arg1)
             match arg:
                 case "flow":
                     self.flow(pallete)
@@ -216,6 +221,8 @@ class LedStrip():
                     self.light(self.green)
                 case "pulse":
                     self.pulse(pallete)
+                case "colorwheel":
+                    self.light(arg1)
                 case "stop":
                     self.wait()
                 case "quit":
@@ -267,8 +274,6 @@ class LedStrip():
             
         
         self.next(self.pulse, pallete=pallete)
-
-
 
     def virginLights(self):
         i = 0
@@ -352,7 +357,7 @@ class LedStrip():
                     self.pixels[i] = color
                 else:
                     self.pixels[i] = self.blank
-            time.sleep(self.delay)
+            time.sleep(self.delay*10)
             self.pixels.show()
 
             for i in range(self.numPixels):
