@@ -87,10 +87,10 @@ async def checkAuth(request: Request, next):
 # ROUTES
 
 @app.get("/program")
-async def getFlow(func: str):
+async def getColor(func: str):
     allowed_functions = ["flow", "alternate", "collapse", "nightLight", "virginLights", "light", "red", "blue", "green", "pulse", "stop", "quit"]
 
-    if func not in allowed_functions:
+    if func not in allowed_functions and not func.startswith("colorwheel"):
         return HTTPException(status_code=400, detail=f"Not an allowed function: {func}")
     
     err = sockCommand(f"func:{func}")
