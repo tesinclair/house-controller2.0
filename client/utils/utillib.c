@@ -1,7 +1,6 @@
 #include"utillib.h"
 #include<stdio.h>
 #include<stdlib.h>
-#include<string.h>
 
 int free_all(void **memory_stack){
     if (memory_stack == NULL){

@@ -10,9 +10,10 @@
 #inlcude"network/client.h"
 #include"assistant/ai.h"
 #include"l-script/lscript.h"
-#include"utillib.h"
+#include"utils/utillib.h"
 
-void presetButtonClicked(GtkWidget *widgets, gpointer pointer);
+void presetButtonClicked(GtkWidget *widget, gpointer pointer);
+void setBrightnessClicked(GtkWidget *widget, gpointer pointer);
 
 void **memoryStack = mem_stack_init();
 
@@ -28,7 +29,7 @@ int main(int argc, char *argv[]){
 
     builder = gtk_builder_new();
 
-    if (gtk_builder_ad_from_file(builder, "gui.glade", NULL) == 0){
+    if (gtk_builder_add_from_file(builder, "gui.glade", NULL) == 0){
         printf("gtk_builder_add_from_file FAILED\n");
         return EXIT_FAILURE;
     }
@@ -81,4 +82,8 @@ void presetButtonClicked(GtkWidget *widget, __attribute__((unused)) gpointer poi
     if (request != NULL){
         client_send(&request);
     }
+}
+
+void setBrightnessClicked(GtkWidget *widget, __attribute__((unused)) gpointer pointer){
+    GtkWidget brightnessScale = gtk_widget_get_template_child()
 }

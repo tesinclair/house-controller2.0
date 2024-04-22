@@ -28,7 +28,7 @@
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="hexpand">False</property>
-            <property name="transition-type">under-up</property>
+            <property name="transition-type">over-up-down</property>
             <child>
               <object class="GtkBox" id="homeContainer">
                 <property name="visible">True</property>
@@ -95,13 +95,17 @@
                     <property name="row-spacing">30</property>
                     <property name="column-spacing">50</property>
                     <child>
-                      <object class="GtkScale">
-                        <property name="width-request">403</property>
+                      <object class="GtkScale" id="brightnessScroller">
+                        <property name="width-request">400</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
+                        <property name="lower-stepper-sensitivity">on</property>
+                        <property name="upper-stepper-sensitivity">on</property>
+                        <property name="show-fill-level">True</property>
+                        <property name="fill-level">100</property>
                         <property name="round-digits">1</property>
+                        <property name="digits">0</property>
                         <property name="value-pos">right</property>
-                        <signal name="move-slider" handler="setBrightnessVal" swapped="no"/>
                       </object>
                       <packing>
                         <property name="left-attach">0</property>
@@ -114,7 +118,7 @@
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="receives-default">True</property>
-                        <signal name="clicked" handler="setBrightnessButtonClicked" swapped="no"/>
+                        <signal name="clicked" handler="setBrightnessClicked" swapped="no"/>
                       </object>
                       <packing>
                         <property name="left-attach">1</property>
@@ -660,14 +664,26 @@
                         <property name="can-focus">False</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <object class="GtkButton">
-                            <property name="label" translatable="yes">button</property>
+                          <object class="GtkButton" id="saveButton">
+                            <property name="label" translatable="yes">Save</property>
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="receives-default">True</property>
+                            <signal name="clicked" handler="saveButtonClicked" swapped="no"/>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="openButton">
+                            <property name="label" translatable="yes">Open</property>
+                            <property name="visible">True</property>
+                            <property name="can-focus">True</property>
+                            <property name="receives-default">True</property>
+                            <signal name="clicked" handler="openButtonClicked" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>

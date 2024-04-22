@@ -17,9 +17,7 @@
 
 int free_all(void **memory_stack);
 
-int push_mem(void *ptr, void **memory_stack);
-
-int pop_mem(void *ptr, void **memory_stack);
+int push_mem(void *ptr, void ***memory_stack);
 
 void **mem_alloc_init();
 
