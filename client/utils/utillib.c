@@ -2,59 +2,60 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-int free_all(void **memory_stack){
-    if (memory_stack == NULL){
-        return NO_MEMORY_ALLOCATIONS;
+int utilFreeAll(void **memoryStack){
+    if (memoryStack == NULL){
+        return NO_MEMORY_STACK;
     }
 
-    for (int i = 0; memory_stack[i] != SENTINEL_VAL; i++){
-        if (memory_stack[i] != NULL){
-            free(memory_stack[i]);
+    for (int i = 0; memoryStack[i] != TERMINATOR; i++){
+        if (memoryStack[i] != NULL){
+            free(memoryStack[i]);
         }
     }
 
-    free(memory_stack);
+    free(memoryStack);
     
     return FREE_SUCCESSFUL;
 }
 
-int push_mem(void *ptr, void ***memory_stack){
+int utilPushStack(void *ptr, void ***memoryStack){
     if (ptr == NULL){
         return FAKE_POINTER;
     }
 
-    if (memory_stack == NULL){
+    if (memoryStack == NULL){
         return NO_MEMORY_STACK;
     }
 
     int length = 0;
+    printf("val: %p", (void *)(*memoryStack)[length]); 
 
-    while (memory_stack[i] != SENTINEL_VAL){
+    do{
         length++;
+    }while (memoryStack[length] != TERMINATOR);
+
+    *memoryStack = realloc(*memoryStack, length * sizeof(void *));
+
+    if (memoryStack == NULL){
+        return FAILED_ALLOCATION_ERROR; 
     }
 
-    *memory_stack = realloc(*memory_stack, length++ * sizeof(void *));
-
-    if (memory_stack == NULL){
-        return FAILED_TO_PUSH_ALLOCATION_ERROR; 
-    }
-
-    void *temp = (*memory_stack)[length - 2]
-    (*memory_stack)[length - 2] = ptr;
-    (*memory_stack)[length - 1] = temp;
+    // Put pointer in last position, and move the terminator to the end
+    (*memoryStack)[length - 2] = ptr;
+    (*memoryStack)[length - 1] = TERMINATOR;
 
     return SUCCESSFULLY_PUSHED;
 }
 
-void **mem_alloc_init(){
-    void **memory_allocations = malloc(sizeof(void *));
+void ***utilStackInit(){
+    void **memoryStack = malloc(sizeof(void *));
 
-    if (memory_allocations == NULL){
-        return (void **)FAILED_ALLOCATION_ERROR;
+    if (memoryStack == NULL){
+        return (void ***)FAILED_ALLOCATION_ERROR;
     }
 
-    memory_allocations[0] = SENTINEL_VAL;
+    memoryStack[0] = TERMINATOR;
 
-    return memory_allocations;
+    return (void ***)memoryStack;
 }
 

@@ -10,15 +10,17 @@
 #define SUCCESSFULLY_PUSHED 101
 #define FAKE_POINTER -150
 
+#ifndef TRUE
 #define FALSE 0
 #define TRUE 1
+#endif
 
-#define SENTINEL_VAL ((void *) -199)
+#define TERMINATOR ((void *) -199)
 
-int free_all(void **memory_stack);
+int utilFreeAll(void **memory_stack);
 
-int push_mem(void *ptr, void ***memory_stack);
+int utilPushStack(void *ptr, void ***memory_stack);
 
-void **mem_alloc_init();
+void ***utilStackInit();
 
 #endif

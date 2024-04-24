@@ -7,6 +7,7 @@
     <property name="window-position">center</property>
     <property name="default-width">1200</property>
     <property name="default-height">850</property>
+    <signal name="delete-event" handler="windowDelete" swapped="no"/>
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
