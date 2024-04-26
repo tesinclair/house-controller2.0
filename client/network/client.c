@@ -2,7 +2,7 @@
 #include<stdlib.h>
 #include<stdio.h>
 
-int clientSend(char data[], int length){
-    printf("Data: %s, length: %d", data, length);
-    return SUCCESSFUL_DATA_SENT;
+int clientSend(Request *request){
+    printf("Data: %s, length: %d\n", request->data, request->length);
+    return SEND_SUCCESSFUL;
 }

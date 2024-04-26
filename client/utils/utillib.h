@@ -5,7 +5,6 @@
 // (-199)-(-100) (for failures)
 // and 100-199 (for successful)
 #define NO_MEMORY_STACK -100
-#define FREE_SUCCESSFUL 100
 #define FAILED_ALLOCATION_ERROR -101
 #define SUCCESSFULLY_PUSHED 101
 #define FAKE_POINTER -150
@@ -15,12 +14,20 @@
 #define TRUE 1
 #endif
 
-#define TERMINATOR ((void *) -199)
+typedef struct{
+    void **data;
+    int length;
+    int capacity;
+}MemoryStack;
 
-int utilFreeAll(void **memory_stack);
+void utilFreeAll(MemoryStack *memoryStack);
 
-int utilPushStack(void *ptr, void ***memory_stack);
+int utilPushStack(void *ptr, MemoryStack *memoryStack);
 
-void ***utilStackInit();
+void utilResizeStack(int amount, MemoryStack *memoryStack);
+
+void utilFree(void *ptr, MemoryStack *memoryStack);
+
+MemoryStack *utilStackInit();
 
 #endif

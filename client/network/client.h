@@ -5,8 +5,13 @@
 #define PORT 6767
 
 // Client side definitions should be between 200 and 299
-#define SUCCESSFUL_DATA_SENT 201
+#define SEND_SUCCESSFUL 201
 
-int clientSend(char data[], int length);
+typedef struct{
+    char *data;
+    int length;
+}Request;
+
+int clientSend(Request *request);
 
 #endif
