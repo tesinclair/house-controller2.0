@@ -19,4 +19,4 @@ $(TARGET): $(OBJECTS)
 
 .PHONY: clean
 clean:
-	rm -f $(OBJECTS) $(TARGET)
+	rm -f $(OBJECTS) $(TARGET) *.glade~
