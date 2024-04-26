@@ -2,6 +2,12 @@
 <!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
+  <object class="GtkAdjustment" id="brightnessAdjustment">
+    <property name="upper">100</property>
+    <property name="value">100</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+  </object>
   <object class="GtkWindow" id="mWindow">
     <property name="can-focus">False</property>
     <property name="window-position">center</property>
@@ -100,6 +106,7 @@
                         <property name="width-request">400</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
+                        <property name="adjustment">brightnessAdjustment</property>
                         <property name="lower-stepper-sensitivity">on</property>
                         <property name="upper-stepper-sensitivity">on</property>
                         <property name="show-fill-level">True</property>
@@ -135,10 +142,10 @@
                         <child>
                           <object class="GtkButton">
                             <property name="label" translatable="yes">Wait</property>
+                            <property name="name">wait</property>
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="receives-default">True</property>
-                            <property name="name">wait</property>
                             <signal name="clicked" handler="presetButtonClicked" swapped="no"/>
                           </object>
                           <packing>
@@ -150,10 +157,10 @@
                         <child>
                           <object class="GtkButton">
                             <property name="label" translatable="yes">QUIT!</property>
+                            <property name="name">quit</property>
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="receives-default">True</property>
-                            <property name="name">quit</property>
                             <signal name="clicked" handler="presetButtonClicked" swapped="no"/>
                           </object>
                           <packing>
@@ -193,10 +200,10 @@
                         <child>
                           <object class="GtkButton" id="flowButton">
                             <property name="label" translatable="yes">Flow</property>
+                            <property name="name">flow</property>
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="receives-default">True</property>
-                            <property name="name">flow</property>
                             <signal name="clicked" handler="presetButtonClicked" swapped="no"/>
                           </object>
                           <packing>
@@ -207,10 +214,10 @@
                         <child>
                           <object class="GtkButton" id="collapseButton">
                             <property name="label" translatable="yes">Collapse</property>
+                            <property name="name">collapse</property>
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="receives-default">True</property>
-                            <property name="name">collapse</property>
                             <signal name="clicked" handler="presetButtonClicked" swapped="no"/>
                           </object>
                           <packing>
@@ -221,10 +228,10 @@
                         <child>
                           <object class="GtkButton" id="alternateButton">
                             <property name="label" translatable="yes">Alternate</property>
+                            <property name="name">alternate</property>
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="receives-default">True</property>
-                            <property name="name">alternate</property>
                             <signal name="clicked" handler="presetButtonClicked" swapped="no"/>
                           </object>
                           <packing>
@@ -235,10 +242,10 @@
                         <child>
                           <object class="GtkButton" id="pulseButton">
                             <property name="label" translatable="yes">Pulse</property>
+                            <property name="name">pulse</property>
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="receives-default">True</property>
-                            <property name="name">pulse</property>
                             <signal name="clicked" handler="presetButtonClicked" swapped="no"/>
                           </object>
                           <packing>
@@ -249,10 +256,10 @@
                         <child>
                           <object class="GtkButton" id="nightlightButton">
                             <property name="label" translatable="yes">Night Light</property>
+                            <property name="name">nightlight</property>
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="receives-default">True</property>
-                            <property name="name">nightlight</property>
                             <signal name="clicked" handler="presetButtonClicked" swapped="no"/>
                           </object>
                           <packing>
@@ -263,10 +270,10 @@
                         <child>
                           <object class="GtkButton" id="virginlightsButton">
                             <property name="label" translatable="yes">Virgin Lights</property>
+                            <property name="name">virginlights</property>
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="receives-default">True</property>
-                            <property name="name">virginlights</property>
                             <signal name="clicked" handler="presetButtonClicked" swapped="no"/>
                           </object>
                           <packing>
@@ -277,10 +284,10 @@
                         <child>
                           <object class="GtkButton" id="redButton">
                             <property name="label" translatable="yes">Red</property>
+                            <property name="name">red</property>
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="receives-default">True</property>
-                            <property name="name">red</property>
                             <signal name="clicked" handler="presetButtonClicked" swapped="no"/>
                           </object>
                           <packing>
@@ -291,10 +298,10 @@
                         <child>
                           <object class="GtkButton" id="greenButton">
                             <property name="label" translatable="yes">Green</property>
+                            <property name="name">green</property>
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="receives-default">True</property>
-                            <property name="name">green</property>
                             <signal name="clicked" handler="presetButtonClicked" swapped="no"/>
                           </object>
                           <packing>
@@ -305,10 +312,10 @@
                         <child>
                           <object class="GtkButton" id="blueButton">
                             <property name="label" translatable="yes">Blue</property>
+                            <property name="name">blue</property>
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="receives-default">True</property>
-                            <property name="name">blue</property>
                             <signal name="clicked" handler="presetButtonClicked" swapped="no"/>
                           </object>
                           <packing>
@@ -319,10 +326,10 @@
                         <child>
                           <object class="GtkButton" id="whiteButton">
                             <property name="label" translatable="yes">White</property>
+                            <property name="name">white</property>
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="receives-default">True</property>
-                            <property name="name">white</property>
                             <signal name="clicked" handler="presetButtonClicked" swapped="no"/>
                           </object>
                           <packing>
