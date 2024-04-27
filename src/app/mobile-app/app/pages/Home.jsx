@@ -7,7 +7,7 @@ const Home = (props) => {
     return (
         <View style={styles.container}>
             <Heading headingText="LIGHTS MOTHAFUCKER"/>
-            <AiAssistant variation='FULLSCREEN' />
+            <AiAssistant />
         </View>
     );
 };
