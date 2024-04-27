@@ -21,4 +21,4 @@ $(TARGET): $(OBJECTS)
 
 .PHONY: clean
 clean:
-	rm -f $(OBJECTS) $(TARGET) *.glade~
+	rm -f $(OBJECTS) $(MAIN_DIR)/$(TARGET) $(MAIN_DIR)/*.glade~
