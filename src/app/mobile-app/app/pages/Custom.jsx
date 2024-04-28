@@ -1,13 +1,21 @@
 import React from 'react';
-import { Text, View } from 'react-native';
-import { Heading } from './components/TextItems';
+import { Text, View, StyleSheet } from 'react-native';
+import TitleAiHeader from './components/TitleAiHeader';
 
 const Custom = (props) => {
     return (
-        <View >
-            <Heading headingText="LIGHTS MOTHAFUCKER" />
+        <View style={styles.container}>
+            <TitleAiHeader headingText="CUSTOM MOTHAFUCKER" />
         </View>
     );
 };
 
 export default Custom;
+
+const styles = StyleSheet.create({
+    container: {
+        flexDirection: 'column',
+        backgroundColor: '#112',
+        minHeight: '100%'
+    },
+});

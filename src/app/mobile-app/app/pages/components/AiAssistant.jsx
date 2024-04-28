@@ -1,25 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { StyleSheet, Text } from 'react-native';
-import { Canvas } from '@react-three/fiber';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { Object3D } from 'three';
 
-const AiAssistant = (props) => {
+const dummy = new Object3D();
+
+const AssistantBubble = (props) => {
     const [talking, setTalking] = useState(false);
-    const [interact, setInteract] = useState(false);
+
+    const assistant = useRef();
+
+    useFrame((state, delta) => {
+        customDelta = 0.01*Math.cos(delta);
+        assistant.current.rotation.x += customDelta;
+        assistant.current.rotation.y += customDelta / 1.25;
+    });
 
     return (
-        <Canvas>
-            <ambientLight />
-            <mesh 
-                {...props}
-                onClick={(e) => {
-                    setInteract(true);
-                    setTimeout(() => setInteract(false), 200);
-                }}
-                scale={interact ? 1.5 : 1}
-            >
-                <sphereGeometry />
-                <meshStandardMaterial color="#ddd" />
-            </mesh>
+        <mesh
+            {...props}
+            ref={assistant} 
+        >
+            <icosahedronGeometry
+                args={[2, 1]}
+            />
+            <meshStandardMaterial color="#ddd" wireframe/>
+        </mesh>
+    );
+};
+
+const AiAssistant = (props) => {
+
+
+    return (
+        <Canvas camera = {{position: [0, 5, 5]}}>
+            <ambientLight args={[0xdddddd, .25]}/>
+            <directionalLight position={[5, 5, 5]} />
+            <AssistantBubble {...props} />
         </Canvas>
     );
 };

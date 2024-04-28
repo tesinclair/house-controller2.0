@@ -1,13 +1,21 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import TitleAiHeader from './components/TitleAiHeader';
 
 const LightSim = (props) => {
     return (
-        <View >
-            <Text>LIGHT SIMULATOR</Text>
+        <View style={styles.container}>
+            <TitleAiHeader headingText="LIGHTSIM MOTHERFUCKER" />
         </View>
     );
 };
 
 export default LightSim;
 
+const styles = StyleSheet.create({
+    container: {
+        flexDirection: 'column',
+        backgroundColor: '#112',
+        minHeight: '100%'
+    },
+});

@@ -1,9 +1,18 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { Text, StyleSheet } from 'react-native'
 
+let headingSize;
+
 const Heading = (props) => {
+    const [headingSize, setHeadingSize] = useState(30);
+
+    useEffect(() => {
+        if (props.headingScale){
+            setHeadingSize(props.headingScale * 30); 
+        }
+    }, [props.headingScale]);
     return (
-        <Text style = {styles.heading}>
+        <Text style={[styles.heading, {fontSize: headingSize}]}>
             {props.headingText}
         </Text>
     );
@@ -14,11 +23,10 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: '#ddd',
         fontWeight: 'bold',
-        fontSize: 30,
-        marginVertical: 20,
-    }
+        marginVertical: 30,
+    },
 });
 
 export {
-    Heading
+    Heading,
 };
