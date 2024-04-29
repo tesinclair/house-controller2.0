@@ -45,7 +45,7 @@ const Presets = (props) => {
                 <UtilButton 
                     key={btn.id}
                     btnText={btn.name}
-                    btnColor={btn.data}
+                    btnColor={btn.color}
                     callback={() => clientSend(btn.data)} 
                 />
                 ))}
@@ -101,6 +101,7 @@ const styles = StyleSheet.create({
         marginTop: 50,
         flexDirection: 'row',
         justifyContent: 'space-evenly',
+        alignItems: 'center',
     },
     brightnessScrollerContainer: {
         marginTop: 50,

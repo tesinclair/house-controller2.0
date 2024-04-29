@@ -2,6 +2,7 @@ import { StyleSheet, StatusBar, View } from 'react-native';
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+
 import Home from './pages/Home';
 import Custom from './pages/Custom';
 import Presets from './pages/Presets';
@@ -9,11 +10,22 @@ import LightSim from './pages/LightSim';
 
 const Tab = createMaterialTopTabNavigator();
 
+const screenOptions = {
+    tabBarStyle: {
+        backgroundColor: '#171717',
+    },
+    tabBarItemStyle:{
+        backgroundColor: '#171717',
+    },
+    tabBarActiveTintColor: '#ddd',
+};
+
 export default function App() {
   return (
     <NavigationContainer> 
       <StatusBar hidden={false} />
       <Tab.Navigator 
+        {...{ screenOptions}}
         initialRouteName='Home'
         backBehavior='initialRoute'
       >

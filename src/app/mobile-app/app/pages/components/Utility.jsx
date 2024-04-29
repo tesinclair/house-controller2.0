@@ -29,13 +29,14 @@ const UtilBrightnessScroller = (props) => {
             style={styles.brightnessScroller}
             minimumValue={0}
             maximumValue={100}
-            minimumTrackTintColor="#555"
+            minimumTrackTintColor="#666"
             maximimTrackTintColor="#333"
             lowerLimit={0}
             upperLimit={100}
             onValueChange={(brightness) => props.callback(brightness)}
             step={1}
             value={100}
+            thumbTintColor="#333"
         />
     );
 };
@@ -58,6 +59,8 @@ const styles = StyleSheet.create({
         paddingTop: 10,
     },
     brightnessScroller: {
+        width: 300,
+        height: 40,
     },
 });
 
