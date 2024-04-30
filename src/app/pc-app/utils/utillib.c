@@ -3,10 +3,18 @@
 #include<stdlib.h>
 
 void utilFreeAll(MemoryStack *memoryStack){
+    if (memoryStack == NULL){
+	    return NO_MEMORY_STACK
+    }
     for (int i = 0; i < memoryStack->length; i++){
+	if (data[i] == NULL){
+		continue;
+	}
         free(memoryStack->data[i]);
     }
-    free(memoryStack->data);
+    if (memoryStack->data != NULL){
+    	free(memoryStack->data);
+    }
     free(memoryStack);
 }
 
@@ -14,7 +22,7 @@ int utilPushStack(void *ptr, MemoryStack *memoryStack){
     if (ptr == NULL){
         return FAKE_POINTER;
     }
-    if (memoryStack->data == NULL && memoryStack->data > 0){
+    if (memoryStack->data == NULL && memoryStack->capacity > 0){
         return NO_MEMORY_STACK;
     }
     
@@ -28,13 +36,14 @@ int utilPushStack(void *ptr, MemoryStack *memoryStack){
 }
 
 void utilResizeStack(int amount, MemoryStack *memoryStack){
-    // Resize memory stack by 1
-    memoryStack->capacity += amount;
-    memoryStack->data = realloc(memoryStack->data, memoryStack->capacity * sizeof(void *));
-    if (memoryStack->data == NULL && memoryStack->capacity > 0){
+    void *temp = realloc(memoryStack->data, (memoryStack->capacity + amount) * sizeof(void *));
+    if (temp == NULL){
         printf("FAILED TO ALLOCATE MEMORY FOR MEMORY STACK REALLOC! ABORTING!\n");
-        exit(EXIT_FAILURE);
+	utilFreeAll(memoryStack);
+	exit(EXIT_FAILURE);
     }
+    memoryStack->capacity += amount;
+    memoryStack->data = temp;
 }
 
 MemoryStack *utilStackInit(int initial_capacity){
@@ -45,6 +54,7 @@ MemoryStack *utilStackInit(int initial_capacity){
     memoryStack->data = malloc(sizeof(void *) * initial_capacity);
     if (memoryStack->data == NULL){
         printf("FAILED TO ALLOCATE MEMORY FOR MEMORY STACK! ABORTING!\n");
+	free(memoryStack);
         exit(EXIT_FAILURE);
     }
 
