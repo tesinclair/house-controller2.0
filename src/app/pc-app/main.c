@@ -8,7 +8,7 @@
 #include<math.h>
 #include<GL/gl.h>
 
-#include"../cli-util/network/client.h"
+#include"cli-util/network/client.h"
 #include"utils/utillib.h"
 
 void presetButtonClicked(GtkButton *button, __attribute__((unused)) gpointer pointer);
