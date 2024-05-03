@@ -1,7 +1,3 @@
 RPi.GPIO
 rpi_ws281x
 adafruit-circuitpython-neopixel
-
-fastapi[all]
-jinja2
-uvicorn

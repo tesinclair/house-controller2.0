@@ -4,8 +4,6 @@ import RPi.GPIO as gpio
 import time
 import sys
 import queue
-import socket
-import threading
 import random
 import ast
 
@@ -30,7 +28,7 @@ Classes:
             - alternate: creates an alternating pattern from one side to the other
             - setBrightness: changes the self.brightness to value self.brightness 
 
-    - Notifier: This is a 10 pin led that will be used for errors and logging
+    - Notifier: This is a 10 pin led that will be used for errors and logging // Currently Not used
         Methods:
             - __new__: ensure that only one instance is active at a time. Set the activeNotifier
             - getActiveNotifier: returns the currently active notifier, if none exist, one is created
@@ -41,96 +39,6 @@ Classes:
 For reference, I am using camelCase not snake_case simply because I don't like snake_case
 
 """
-
-class Notifier():
-
-    activeNotifier = None
-    ON = gpio.LOW
-    OFF = gpio.HIGH
-
-    def __new__(cls):
-        if cls.activeNotifier:
-            utils.Logger.log("", "Too Many Notifiers", "[NONE]")
-            return None
-        cls.activeNotifier = super().__new__(cls)
-        return cls.activeNotifier
-
-    def __init__(self):
-        self.numPins = 10
-        self.delay = 0.2
-        self.iterations = 5
-
-    def __enter__(self):
-        if gpio.getmode() == 11:
-            gpio.setmode(gpio.BCM)
-            self.PINS = [17, 18, 27, 23, 22, 24, 5, 25, 6, 12]
-
-        else:
-            gpio.setmode(gpio.BOARD)
-            self.PINS = [11, 12, 13, 16, 15, 18, 29, 22, 31, 32]
-
-        gpio.setup(self.PINS, gpio.OUT)
-        gpio.output(self.PINS, self.OFF)
-        return self
-
-    def __exit__(self, exType, exVal, traceback):
-        if exType:
-            utils.Logger.log(exType, exVal, traceback)
-
-        gpio.output(self.PINS, self.OFF)
-        gpio.setup(self.PINS, gpio.IN)
-        gpio.cleanup()
-
-    @classmethod
-    def getActiveNotifier(cls):
-        if cls.activeNotifier:
-            return cls.activeNotifier
-        else:
-            return cls.__new__(cls)
-
-    def error(self):
-        for _ in range(self.iterations):
-            gpio.output(self.PINS, self.ON)
-            time.sleep(self.delay)
-            gpio.output(self.PINS, self.OFF)
-            time.sleep(self.delay)
-
-    def newReq(self):
-        for _ in range(self.iterations):
-            for pin in self.PINS:
-                gpio.output(pin, self.ON)
-                time.sleep(self.delay)
-                gpio.output(pin, self.OFF)
-
-    def rejectedReq(self):
-        for _ in range(self.iterations):
-            for i in range(int(self.numPins/2)): 
-                pinL = self.PINS[i]
-                pinR = self.PINS[-(1 + i)] # Start from right at [-1]
-
-                gpio.output(pinL, self.ON)
-                gpio.output(pinR, self.ON)
-                time.sleep(self.delay)
-                gpio.output(pinL, self.OFF)
-                gpio.output(pinR, self.OFF)
-
-    def badOptions(self):
-        for _ in range(self.iterations):
-            for i in range(len(self.PINS)):
-                if i % 2 == 0:
-                    gpio.output(self.PINS[i], self.ON)
-                else:
-                    gpio.output(self.PINS[i], self.OFF)
-
-            time.sleep(self.delay/2)
-
-            for i in range(len(self.PINS)):
-                if i % 2 != 0:
-                    gpio.output(self.PINS[i], self.ON)
-                else:
-                    gpio.output(self.PINS[i], self.OFF)
-
-            time.sleep(self.delay/2)
 
 class LedStrip():
     instance=None
@@ -384,46 +292,96 @@ class LedStrip():
     def setBrightness(self, brightness):
         self.brightness = brightness
 
-def main(q):
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        sock.bind(("127.0.0.1", 7777))
-        sock.listen(1)
+# UNUSED
 
-        print("[SOCKET] Listening on localhost:7777")
+class Notifier():
 
-        while True:
-            conn, addr = sock.accept()
-            with conn:
-                print(f'[SOCKET][CONNECTION]: {addr}')
+    activeNotifier = None
+    ON = gpio.LOW
+    OFF = gpio.HIGH
 
-                data = conn.recv(1024)
-                print(f"[SOCKET][{addr}]: {data}")
+    def __new__(cls):
+        if cls.activeNotifier:
+            utils.Logger.log("", "Too Many Notifiers", "[NONE]")
+            return None
+        cls.activeNotifier = super().__new__(cls)
+        return cls.activeNotifier
 
-                if not data:
-                    break
+    def __init__(self):
+        self.numPins = 10
+        self.delay = 0.2
+        self.iterations = 5
 
-                data = data.decode('UTF-8')
-                
-                q.put(data)
-                conn.sendall(bytes("OK", 'UTF-8'))
+    def __enter__(self):
+        if gpio.getmode() == 11:
+            gpio.setmode(gpio.BCM)
+            self.PINS = [17, 18, 27, 23, 22, 24, 5, 25, 6, 12]
 
-if __name__ == "__main__":
-    queue = queue.Queue()
+        else:
+            gpio.setmode(gpio.BOARD)
+            self.PINS = [11, 12, 13, 16, 15, 18, 29, 22, 31, 32]
 
-    try:
-        thread = threading.Thread(target=main, args=[queue])
-        thread.start()
-        
-        # Start the Event Loop
-        running = True
-        while running:
-            try:
-                with LedStrip(queue) as led:
-                    running = led.next(None)
-            except Exception as e:
-                print(e)
+        gpio.setup(self.PINS, gpio.OUT)
+        gpio.output(self.PINS, self.OFF)
+        return self
 
-    except KeyboardInterrupt:
-        print("Exiting")
+    def __exit__(self, exType, exVal, traceback):
+        if exType:
+            utils.Logger.log(exType, exVal, traceback)
+
+        gpio.output(self.PINS, self.OFF)
+        gpio.setup(self.PINS, gpio.IN)
+        gpio.cleanup()
+
+    @classmethod
+    def getActiveNotifier(cls):
+        if cls.activeNotifier:
+            return cls.activeNotifier
+        else:
+            return cls.__new__(cls)
+
+    def error(self):
+        for _ in range(self.iterations):
+            gpio.output(self.PINS, self.ON)
+            time.sleep(self.delay)
+            gpio.output(self.PINS, self.OFF)
+            time.sleep(self.delay)
+
+    def newReq(self):
+        for _ in range(self.iterations):
+            for pin in self.PINS:
+                gpio.output(pin, self.ON)
+                time.sleep(self.delay)
+                gpio.output(pin, self.OFF)
+
+    def rejectedReq(self):
+        for _ in range(self.iterations):
+            for i in range(int(self.numPins/2)): 
+                pinL = self.PINS[i]
+                pinR = self.PINS[-(1 + i)] # Start from right at [-1]
+
+                gpio.output(pinL, self.ON)
+                gpio.output(pinR, self.ON)
+                time.sleep(self.delay)
+                gpio.output(pinL, self.OFF)
+                gpio.output(pinR, self.OFF)
+
+    def badOptions(self):
+        for _ in range(self.iterations):
+            for i in range(len(self.PINS)):
+                if i % 2 == 0:
+                    gpio.output(self.PINS[i], self.ON)
+                else:
+                    gpio.output(self.PINS[i], self.OFF)
+
+            time.sleep(self.delay/2)
+
+            for i in range(len(self.PINS)):
+                if i % 2 != 0:
+                    gpio.output(self.PINS[i], self.ON)
+                else:
+                    gpio.output(self.PINS[i], self.OFF)
+
+            time.sleep(self.delay/2)
+
 
