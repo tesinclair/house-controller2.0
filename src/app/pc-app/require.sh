@@ -1,44 +1,38 @@
 #!/bin/bash
 
 # Build essential should be covered by dockerfile
-deps="packages.txt"
+DEPENDENCIES="packages.txt"
 
 echo "Installing Dependencies"
 
-echo "Finding dependencies in $deps"
-if [ ! -f "$deps" ]; then
-    echo "No dependency file $deps"
+echo "Finding dependencies in $DEPENDENCIES"
+if [ ! -f "$DEPENDENCIES" ]; then
+    echo "No dependency file $DEPENDENCIES"
     exit 1
 fi
 
-while IFS= read -r dep; do
-    echo "Installing $dep with apt"
+exit_status=0
+
+while IFS= read -r dependency; do
+    echo "Installing $dependency with apt"
 
     while true; do
-        err=$(apt-get install -y $dep 2>&1 | grep -s 'E:')
+        err=$(apt install -y $dependency 2>&1 | grep -s "E:")
 
-        if [[ -n "$err" ]] then
-            echo "apt-get failed"
-            echo "apt-get failed to install $dep. $err" >> /var/logs/require.log
-            echo "Try again?"
-            read retry
-
-            if [[ "$retry" == 'y' ]] then
-                echo "Retrying..."
-                continue
-            else
-                echo "ABORTING"
-                trap "echo Failed to Install Package $dep" EXIT
-                exit 1
-            fi
+        if [ -n "$err" ]; then
+            echo "apt failed to install $dependency. $err" >> /var/log/require.log
+            echo "Failed to install $dependency. Skipping!"
+            trap "echo Failed to install package $dependency" EXIT
+            exit_status=2
+            break
 
         else
-            echo "Successfullying installed $dep"
+            echo "Successfullying installed $dependency"
             echo ""
             break
         fi
     done
-done < "$deps"
+done < "$DEPENDENCIES"
 
 echo "Finished."
-exit 0
+exit $exit_status
