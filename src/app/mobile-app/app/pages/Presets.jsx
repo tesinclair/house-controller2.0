@@ -36,7 +36,7 @@ const Presets = (props) => {
                 <UtilButton 
                     key={btn.id}
                     btnText={btn.name}
-                    callback={() => clientSend(btn.data)} 
+                    callback={() => clientSend("func:" + btn.data)} 
                 />
                 ))}
             </View>
@@ -46,7 +46,7 @@ const Presets = (props) => {
                     key={btn.id}
                     btnText={btn.name}
                     btnColor={btn.color}
-                    callback={() => clientSend(btn.data)} 
+                    callback={() => clientSend("func:" + btn.data)} 
                 />
                 ))}
             </View>
@@ -60,7 +60,7 @@ const Presets = (props) => {
                 />
                 <UtilButton
                     btnText="Set Color"
-                    callback={() => clientSend('color:' + colorPickerColor)}
+                    callback={() => clientSend('func:colorwheel,' + colorPickerColor)}
                 />
             </View>
             <View style={styles.brightnessScrollerContainer}>
@@ -69,7 +69,7 @@ const Presets = (props) => {
                 />
                 <UtilButton
                     btnText="Set Brightness"
-                    callback={() => clientSetBrightness(brightness)}
+                    callback={() => clientSend('brightness:' + brightness)}
                 />
             </View>
         </View>

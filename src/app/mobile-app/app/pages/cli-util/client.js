@@ -1,68 +1,28 @@
 import React from 'react';
 import { Alert } from 'react-native';
 
+const net = require("net");
+
 function clientSend(data){
-    url = 'http://192.168.1.171:6767/program?func=' + data;
-    fetch(url)
-        .then((response) => response.json())
-        .then((json) => {
-            if (json["status_code"] != 200){
-                console.log(json);
-                return (Alert.alert(
-                    'Light Change Failed',
-                    'Failed to change the lights: ' + json["detail"],
-                    [
-                        {
-                            text: 'UNDERSTOOD'
-                        },
-                    ],
-                    {
-                        cancelable: true,
-                    },
-                ));
-            }else {
-                return true
-            }
+    const client = new net.Socket();
+
+    client.connect(6767, "192.168.1.171", () => {
+        client.write(data);
+    });
+
+    client.on('data', (data) => {
+        if (data.toString() != "OK"){
+            console.log(data.toString());
         }
-    ).catch((e) => {
-        console.disableYellowBox = true;
-        console.error(e);
-        throw e;
+
+        client.end();
+    });
+
+    client.on('close', () => {
+        console.log('[CLIENT]: Server closed connection');
     });
 }
-
-function clientSetBrightness(data){
-    url = 'http://192.168.1.171:6767/set?brightness=' + data;
-    fetch(url)
-        .then((response) => response.json())
-        .then((json) => {
-            if (json["status_code"] != 200){
-                console.log(json);
-                return (Alert.alert(
-                    'Light Change Failed',
-                    'Failed to change the lights: ' + json["detail"],
-                    [
-                        {
-                            text: 'UNDERSTOOD'
-                        },
-                    ],
-                    {
-                        cancelable: true,
-                    },
-                ));
-            }else {
-                return true
-            }
-        }
-    ).catch((e) => {
-        console.disableYellowBox = true;
-        console.error(e);
-        throw e;
-    });
-}
-
 
 export {
     clientSend,
-    clientSetBrightness,
 }
