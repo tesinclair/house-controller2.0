@@ -11,6 +11,6 @@ COPY . /build
 WORKDIR /build
 
 # Install dev deps
-RUN chmod u+x require.sh && ./require.sh
+RUN chmod u+x require.sh && sh ./require.sh
 
 RUN make

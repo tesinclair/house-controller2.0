@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Build essential should be covered by dockerfile
 DEPENDENCIES="packages.txt"
