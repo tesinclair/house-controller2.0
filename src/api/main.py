@@ -12,6 +12,7 @@ def main():
 
     try:
         thread = Thread(target=handle_socket, args=[queue])
+
         thread.start()
 
         while True:

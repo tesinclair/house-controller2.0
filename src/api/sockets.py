@@ -1,6 +1,9 @@
 import json
 import socket
-#import queue
+import queue
+
+sys.path.append("./utils")
+import utils
 
 class GPIOSocket:
     def __init__(self, queue):
@@ -76,3 +79,9 @@ class GPIOSocket:
             return False
 
         return True
+
+    def remove_client(self):
+        self.conn.close()
+        print(f"[SERVER]: Closed connection with {self.conn}")
+        self.conn = None
+        self.addr = None
