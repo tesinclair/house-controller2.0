@@ -1,6 +1,7 @@
 import json
 import socket
 import queue
+import sys
 
 sys.path.append("./utils")
 import utils
@@ -53,7 +54,7 @@ class GPIOSocket:
             print(f"[SERVER]: Request accepted. Removing {self.addr}")
             self.remove_client()
 
-    def validate_id(self):
+    def validate_ip(self):
         with open("hidden/whitelist.txt", "r") as f:
             if self.addr not in f.read():
                 return False
