@@ -15,3 +15,18 @@ to be fixed or entirely replaced at somepoint in the future.
 
 Thanks for reading. And, I am sorry.
 Tai.
+
+
+Explanation for specifics:
+
+This is where I will justify my choices for certain things that don't seem very elegant.
+
+Middleman:
+I am using a middleman simply because I don't like the idea of opening a tcp socket inside a react native app
+to me, it screams security risk, so instead I am favouring a middle man. The middle man will simple throw up an 
+endpoint for the client, and then connect to the server on the back end. I'm still not sure where to run the node
+during deployment, but that's a problem for the future me.
+
+This is very similar to my orignal api approach of having a fastapi that talks to the socket. 
+This, i feel, still makes more sense, as (while I still have the overhead of the js side) I don't need to talk to the 
+http server on the pc app side.
