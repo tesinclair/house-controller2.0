@@ -5,7 +5,7 @@ import { Text, View, StyleSheet, Pressable, Alert } from 'react-native';
 import { TriangleColorPicker } from 'react-native-color-picker';
 
 import { UtilButton, UtilBrightnessScroller } from './components/Utility';
-import { clientSend, clientSetBrightness } from './cli-util/client';
+import cliSend  from './cli-util/client';
 import TitleAiHeader from './components/TitleAiHeader';
 
 const Presets = (props) => {
@@ -36,7 +36,7 @@ const Presets = (props) => {
                 <UtilButton 
                     key={btn.id}
                     btnText={btn.name}
-                    callback={() => clientSend("func:" + btn.data)} 
+                    callback={() => cliSend("func:" + btn.data)} 
                 />
                 ))}
             </View>
@@ -46,7 +46,7 @@ const Presets = (props) => {
                     key={btn.id}
                     btnText={btn.name}
                     btnColor={btn.color}
-                    callback={() => clientSend("func:" + btn.data)} 
+                    callback={() => cliSend("func:" + btn.data)} 
                 />
                 ))}
             </View>
@@ -60,7 +60,7 @@ const Presets = (props) => {
                 />
                 <UtilButton
                     btnText="Set Color"
-                    callback={() => clientSend('func:colorwheel,' + colorPickerColor)}
+                    callback={() => cliSend('func:colorwheel,' + colorPickerColor)}
                 />
             </View>
             <View style={styles.brightnessScrollerContainer}>
@@ -69,7 +69,7 @@ const Presets = (props) => {
                 />
                 <UtilButton
                     btnText="Set Brightness"
-                    callback={() => clientSend('brightness:' + brightness)}
+                    callback={() => cliSend('brightness:' + brightness)}
                 />
             </View>
         </View>
