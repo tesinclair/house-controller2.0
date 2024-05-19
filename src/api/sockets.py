@@ -28,35 +28,40 @@ class GPIOSocket:
     def run(self):
         while True:
             self.conn, self.addr = self.sock.accept()
+            try:
 
-            if not self.validate_ip():
-                print(f"[SERVER]: Refusing connection from {self.addr}")
-                self.remove_client()
-                break
+                if not self.validate_ip():
+                    print(f"[SERVER]: Refusing connection from {self.addr}")
+                    self.remove_client()
 
-            print(f"[SERVER]: Accepting connection from {self.addr}")
+                print(f"[SERVER]: Accepting connection from {self.addr}")
 
-            encoded_data = self.conn.recv(1024)
-            if not encoded_data:
-                break
+                encoded_data = self.conn.recv(1024)
+                if not encoded_data:
+                    self.remove_client() # No data sent
 
-            self.data = encoded_data.decode("UTF-8")
+                self.data = encoded_data.decode("UTF-8")
 
-            if not self.validate_data():
-                print(f"[SERVER]: Recieved bad request: {self.data} from {self.addr}")
-                conn.sendall(bytes("BAD REQUEST", 'UTF-8'))
-                self.remove_client()
-                break
+                if not self.validate_data():
+                    print(f"[SERVER]: Recieved bad request: {self.data} from {self.addr}")
+                    conn.sendall(bytes("BAD REQUEST", 'UTF-8'))
+                    self.remove_client()
             
-            print(f"[SERVER]: Recieved ok request: {self.data} from {self.addr}")
-            self.queue.put(data)
-            self.conn.sendall(bytes("OK", "UTF-8"))
-            print(f"[SERVER]: Request accepted. Removing {self.addr}")
-            self.remove_client()
+                print(f"[SERVER]: Recieved ok request: {self.data} from {self.addr}")
+                self.queue.put(self.data)
+                self.conn.sendall(bytes("OK", "UTF-8"))
+                print(f"[SERVER]: Request accepted. Removing {self.addr}")
+                self.remove_client()
+
+            except Exception as e:
+                print(e)
+                if self.conn:
+                    self.conn.sendall(bytes("500 - SERVERERROR", "UTF-8"))
+                    self.remove_client()
 
     def validate_ip(self):
         with open("hidden/whitelist.txt", "r") as f:
-            if self.addr not in f.read():
+            if self.addr[0] not in f.read():
                 return False
             
         return True
@@ -64,10 +69,12 @@ class GPIOSocket:
     def validate_data(self):
         grammar = None
 
+        print(self.data)
+
         if ":" not in self.data:
             return False
 
-        with open("util/grammar.json", "r") as json_raw:
+        with open("utils/grammar.json", "r") as json_raw:
             grammar = json.load(json_raw)
 
         key, val = self.data.split(":")
@@ -75,7 +82,11 @@ class GPIOSocket:
 
         if allowed_data == None:
             return False
-        
+
+        # For now just allow all brightness
+        if key == "brightness":
+            return True
+
         if val not in allowed_data:
             return False
 

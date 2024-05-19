@@ -1,4 +1,4 @@
 {
-	"func": ["light"],
-	"brightness": [0],
+	"func": ["nightLight", "collapse", "virginLights", "flow", "alternate", "pulse", "red", "green", "blue", "white", "wait", "lights"],
+	"brightness": "float" 
 }

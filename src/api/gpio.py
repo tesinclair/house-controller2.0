@@ -119,7 +119,7 @@ class LedStrip():
                     self.collapse(pallete)
                 case "nightLight":
                     self.light(self.purple)
-                case "light":
+                case "lights":
                     self.light()
                 case "red":
                     self.light(self.red)
