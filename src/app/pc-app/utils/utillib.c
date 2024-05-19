@@ -68,9 +68,7 @@ void utilFree(void *ptr, MemoryStack *memoryStack){
     for (int i = 0; i < memoryStack->length; i++){
         if (memoryStack->data[i] == ptr){
             free(memoryStack->data[i]);
-            for (int j = i+1; j < memoryStack->length; j++){
-                memoryStack->data[j - 1] = memoryStack->data[j];
-            }
+            memmove(&memoryStack->data[i], &memoryStack->data[i+1], (memoryStack->length - i - 1) * sizeof void*);
             utilResizeStack(-1, memoryStack);
             memoryStack->length--;
             break;
