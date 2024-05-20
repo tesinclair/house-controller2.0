@@ -4,7 +4,7 @@ CC = gcc
 CFLAGS = -g -Wall $(shell $(PACKAGE) --cflags gtk+-3.0)
 LDFLAGS = -rdynamic -lGL -lm $(shell $(PACKAGE) --libs gtk+-3.0)
 
-SOURCES = main.c cli-util/network/client.c utils/utillib.c
+SOURCES = main.c utils/utilClient.c utils/utilStack.c
 OBJECTS = $(SOURCES:.c=.o)
 TARGET = main
 

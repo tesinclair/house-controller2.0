@@ -1,6 +1,8 @@
 #ifndef UTILLIB
 #define UTILLIB
 
+// @Section: memory manager defs
+
 // Memory allocation identifiers should always be in the scope: 
 // (-199)-(-100) 
 #define BAD_MEMORY_STACK -100
@@ -8,10 +10,26 @@
 #define NO_STACK_HEAD -102
 #define FAKE_POINTER -150
 
+// @Section: client defs
+
+#define SERVER "192.168.1.171"
+#define PORT 6767
+
+// Client side definitions should be between -200 and -299
+#define SEND_FAILED -201
+#define RECV_FAILED -202
+#define CONNECTION_CLOSE_ERROR -205
+#define SOCKET_FAILED -210
+#define CONNECTION_FAILED -211
+#define CLOSE_FAILED -220
+#define SHUTDOWN_FAILED -221
+
 #ifndef TRUE
 #define FALSE 0
 #define TRUE 1
 #endif
+
+// @Section Memory manager code
 
 typedef struct{
     void *data;
@@ -46,6 +64,24 @@ void utilStackDump(MemoryStack *memoryStack);
 
 // Return true if the stack is empty
 int utilStackIsEmpty(MemoryStack *memoryStack);
+
+// @Section: client socket code
+
+typedef struct{
+    char *data;
+    int length;
+}Request;
+
+struct connection{
+    int fd;
+    int err;
+};
+
+struct connection utilClientConnect();
+
+void utilClientSend(Request *request);
+
+void utilClientCloseConnection(int cli_FD);
 
 #endif
 

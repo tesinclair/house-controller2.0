@@ -1,4 +1,4 @@
-#include"client.h"
+#include"utillib.h"
 #include<stdlib.h>
 #include<stdio.h>
 #include<string.h>
@@ -6,7 +6,7 @@
 #include<sys/socket.h>
 #include<unistd.h>
 
-struct connection clientConnect(){
+struct connection utilClientConnect(){
     struct sockaddr_in serverAddr;
     struct connection conn;
 
@@ -38,7 +38,7 @@ struct connection clientConnect(){
     return conn;
 }
 
-int clientCloseConnection(int cli_FD){
+void utilClientCloseConnection(int cli_FD){
     // Stop listening and sending
     if (shutdown(cli_FD, 2) != 0){
         printf("Failed to shutdown socket");
@@ -52,7 +52,7 @@ int clientCloseConnection(int cli_FD){
 
     return CLOSE_SUCCESSFUL;
 
-int clientSend(Request *request){
+void utilClientSend(Request *request){
     char buf[512] = { 0 };
     size_t bufLength = 512 - 1; // subtract 1 for null terminator
     struct connection conn = clientConnect();
