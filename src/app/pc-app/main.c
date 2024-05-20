@@ -43,7 +43,7 @@ int main(int argc, char *argv[]){
     gtk_widget_show_all(window);
     gtk_main();
 
-    utilFreeAll(memoryStack);
+    utilStackEmpty(memoryStack);
 
     return EXIT_SUCCESS;
 }
@@ -51,7 +51,7 @@ int main(int argc, char *argv[]){
 void presetButtonClicked(GtkButton *button, __attribute__((unused)) gpointer pointer){
     const gchar *func = gtk_widget_get_name(GTK_WIDGET(button));
     const size_t funcLen = strlen(func);
-    const char reqMsg[] = "/program?func=";
+    const char reqMsg[] = "func:";
     const size_t reqMsgLen = strlen(reqMsg);
     Request req;
 
@@ -60,14 +60,11 @@ void presetButtonClicked(GtkButton *button, __attribute__((unused)) gpointer poi
 
     if (req.data == NULL){
         g_print("ERROR allocating memory for variable 'request' in: %s", __function__);
-        utilFreeAll(memoryStack);
+        utilStackEmpty(memoryStack);
+        free(memoryStack);
         exit(EXIT_FAILURE);
     }
-    if (utilPushStack((void *)req.data, memoryStack) != SUCCESSFULLY_PUSHED){
-        g_print("ERROR: failed to push memory");
-        utilFreeAll(memoryStack);
-        exit(EXIT_FAILURE);
-    }
+    utilStackPush(memoryStack, (void *)req.data);
 
     strncpy(req.data, reqMsg, reqMsgLen);
     strncat(req.data, func, funcLen);
@@ -76,7 +73,7 @@ void presetButtonClicked(GtkButton *button, __attribute__((unused)) gpointer poi
         g_print("Failed to send data");
     }
 
-    utilFree(req.data, memoryStack);
+    utilStackFree(memoryStack, req.data);
 }
 
 void setBrightnessClicked(__attribute__((unused)) GtkWidget *widget,
@@ -85,7 +82,8 @@ void setBrightnessClicked(__attribute__((unused)) GtkWidget *widget,
     
     if (brightnessSlider == NULL){
         g_print("ERROR: failed to get brightnessSlider from glade in %s", __function__);
-        utilFreeAll(memoryStack);
+        utilStackEmpty(memoryStack);
+        free(memoryStack);
         exit(EXIT_FAILURE);
     }
 
@@ -93,7 +91,7 @@ void setBrightnessClicked(__attribute__((unused)) GtkWidget *widget,
     char brightnessValStr[4];
     itoa(brightnessValue, brightnessValStr, 4);
 
-    const char reqMsg[] = "/set?brightness=";
+    const char reqMsg[] = "brightness:";
     const size_t reqMsgLen = strlen(reqMsg);
     const size_t brightnessValLen = strlen(brightnessValStr);
     Request req;
@@ -103,14 +101,11 @@ void setBrightnessClicked(__attribute__((unused)) GtkWidget *widget,
 
     if (req.data == NULL){
         g_print("ERROR allocating memory for variable 'req' in: %s", __function__);
-        utilFreeAll(memorystack);
+        utilStackEmpty(memorystack);
+        free(memoryStack);
         exit(EXIT_FAILURE);
     }
-    if (utilPushStack((void *)req.data, memoryStack) != SUCCESSFULLY_PUSHED){
-        g_print("ERROR: failed to push memory in %s", __function);
-        utilFreeAll(memoryStack);
-        exit(EXIT_FAILURE);
-    }
+    utilStackPush(memoryStack, (void *)req.data);
 
     strncpy(req.data, reqMsg, reqMsgLen);
     strncat(req.data, brightnessValStr, brightnessValLen);
@@ -119,7 +114,7 @@ void setBrightnessClicked(__attribute__((unused)) GtkWidget *widget,
         g_print("Failed to send data");
     }
 
-    utilFree(req.data);
+    utilStackFree(memoryStack, req.data);
 }
 
 void customColorButtonClicked(GtkWidget *widget, __attribute__((unused)) gpointer pointer){
