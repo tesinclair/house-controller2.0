@@ -2,11 +2,10 @@
 #define UTILLIB
 
 // Memory allocation identifiers should always be in the scope: 
-// (-199)-(-100) (for failures)
-// and 100-199 (for successful)
-#define NO_MEMORY_STACK -100
-#define FAILED_ALLOCATION_ERROR -101
-#define SUCCESSFULLY_PUSHED 101
+// (-199)-(-100) 
+#define BAD_MEMORY_STACK -100
+#define NO_MEMORY -101
+#define NO_STACK_HEAD -102
 #define FAKE_POINTER -150
 
 #ifndef TRUE
@@ -15,19 +14,38 @@
 #endif
 
 typedef struct{
-    void **data;
-    int length;
-    int capacity;
-}MemoryStack;
+    void *data;
+    Node *next;
+} Node;
 
-void utilFreeAll(MemoryStack *memoryStack);
+typedef struct{
+    Node *head;
+    size_t length;
+} MemoryStack;
 
-int utilPushStack(void *ptr, MemoryStack *memoryStack);
+/*
+ * @INFO
+ * Standardized to use the context (e.g. stack) before the function: (package)util (context)Stack (function)Init
+*/
 
-void utilResizeStack(int amount, MemoryStack *memoryStack);
+// Initialise the memory stack
+void utilStackInit(MemoryStack *memoryStack);
 
-void utilFree(void *ptr, MemoryStack *memoryStack);
+// Push a new pointer to the stack
+void utilStackPush(MemoryStack *memoryStack, void *ptr);
 
-MemoryStack *utilStackInit();
+// Free the given pointer
+void utilStackFree(MemoryStack *memoryStack, void *ptr);
+
+// Free all the memory in the stack (including the stack)
+void utilStackEmpty(MemoryStack *memoryStack);
+
+// @DEBUG
+// Dump the content of the stack to the console 
+void utilStackDump(MemoryStack *memoryStack);
+
+// Return true if the stack is empty
+int utilStackIsEmpty(MemoryStack *memoryStack);
 
 #endif
+
