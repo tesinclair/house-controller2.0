@@ -1,6 +1,11 @@
 #ifndef UTILLIB
 #define UTILLIB
 
+#include<stdlib.h>
+#include<stdio.h>
+#include<string.h>
+#include<unistd.h>
+
 // @Section: memory manager defs
 
 // Memory allocation identifiers should always be in the scope: 
@@ -31,13 +36,13 @@
 
 // @Section Memory manager code
 
-typedef struct{
+typedef struct Node{
     void *data;
-    Node *next;
+    struct Node *next;
 } Node;
 
 typedef struct{
-    Node *head;
+    struct Node *head;
     size_t length;
 } MemoryStack;
 
@@ -70,7 +75,7 @@ int utilStackIsEmpty(MemoryStack *memoryStack);
 typedef struct{
     char *data;
     int length;
-}Request;
+} Request;
 
 struct connection{
     int fd;
@@ -79,9 +84,14 @@ struct connection{
 
 struct connection utilClientConnect();
 
-void utilClientSend(Request *request);
+void utilClientSend(Request *request, MemoryStack *memoryStack);
 
-void utilClientCloseConnection(int cli_FD);
+void utilClientCloseConnection(int cli_FD, MemoryStack *memoryStack);
+
+
+// @Section: custom exit code
+
+void utilExitPanic(int errCode, char *exitMsg, MemoryStack *memoryStack);
 
 #endif
 

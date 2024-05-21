@@ -1,12 +1,13 @@
 #include<gtk/gtk.h>
-#include<stdio.h>
-#include<stdlib.h>
-#include<ctype.h>
-#include<string.h>
 #include<GL/glu.h>
 #include<GL/glut.h>
-#include<math.h>
 #include<GL/gl.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#include <math.h>
 
 #include"utils/utillib.h"
 
@@ -26,7 +27,7 @@ GtkBuilder *builder = NULL;
 int main(int argc, char *argv[]){
     GtkWidget *window;
 
-    memoryStack = utilStackInit();
+    utilStackInit(memoryStack);
 
     gtk_init(&argc, &argv);
 
@@ -58,19 +59,14 @@ void presetButtonClicked(GtkButton *button, __attribute__((unused)) gpointer poi
     req.data = malloc(req.length + 1);
 
     if (req.data == NULL){
-        g_print("ERROR allocating memory for variable 'request' in: %s", __function__);
-        utilStackEmpty(memoryStack);
-        free(memoryStack);
-        exit(EXIT_FAILURE);
+        utilExitPanic(EXIT_FAILURE, "No memory\n", memoryStack);
     }
     utilStackPush(memoryStack, (void *)req.data);
 
     strncpy(req.data, reqMsg, reqMsgLen);
     strncat(req.data, func, funcLen);
 
-    if (clientSend(&req) != SEND_SUCCESSFUL){
-        g_print("Failed to send data");
-    }
+    utilClientSend(&req, memoryStack);
 
     utilStackFree(memoryStack, req.data);
 }
@@ -80,39 +76,30 @@ void setBrightnessClicked(__attribute__((unused)) GtkWidget *widget,
     GtkWidget *brightnessSlider = gtk_builder_get_object(builder, "brightnessAdjustment");
     
     if (brightnessSlider == NULL){
-        g_print("ERROR: failed to get brightnessSlider from glade in %s", __function__);
-        utilStackEmpty(memoryStack);
-        free(memoryStack);
-        exit(EXIT_FAILURE);
+        utilExitPanic(EXIT_FAILURE, "No brightness slider\n", memoryStack);
     }
 
     int brightnessValue = (int)gtk_adjustment_get_value(GTK_ADJUSTMENT(brightnessSlider));
-    char brightnessValStr[4];
-    itoa(brightnessValue, brightnessValStr, 4);
+    char brightnessValStr[10];
+    snprintf(brightnessValStr, 10, "%d", brightnessValue);
 
     const char reqMsg[] = "brightness:";
     const size_t reqMsgLen = strlen(reqMsg);
     const size_t brightnessValLen = strlen(brightnessValStr);
     Request req;
 
-    req.length = reqMsgLen + brightnessValLen
+    req.length = reqMsgLen + brightnessValLen;
     req.data = malloc(req.length + 1);
 
     if (req.data == NULL){
-        g_print("ERROR allocating memory for variable 'req' in: %s", __function__);
-        utilStackEmpty(memorystack);
-        free(memoryStack);
-        exit(EXIT_FAILURE);
+        utilExitPanic(EXIT_FAILURE, "No memory\n", memoryStack);
     }
     utilStackPush(memoryStack, (void *)req.data);
 
     strncpy(req.data, reqMsg, reqMsgLen);
     strncat(req.data, brightnessValStr, brightnessValLen);
 
-    if (clientSend(&req) != SEND_SUCCESSFUL){
-        g_print("Failed to send data");
-    }
-
+    utilClientSend(&req, memoryStack);
     utilStackFree(memoryStack, req.data);
 }
 

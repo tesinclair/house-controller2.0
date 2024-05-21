@@ -1,18 +1,14 @@
 #include"utillib.h"
-#include<stdlib.h>
-#include<stdio.h>
-#include<string.h>
 #include<arpa/inet.h>
 #include<sys/socket.h>
-#include<unistd.h>
 
 struct connection utilClientConnect(){
     struct sockaddr_in serverAddr;
     struct connection conn;
 
-    conn.fd = NULL;
-    conn.err = NULL
-    
+    conn.err = 0;
+    int cli_FD;
+
     if ((cli_FD = socket(AF_INET, SOCK_STREAM, 0)) < 0){
         printf("Failed to create socket");
         conn.err = SOCKET_FAILED;
@@ -23,12 +19,12 @@ struct connection utilClientConnect(){
     serverAddr.sin_port = htons(PORT);
 
     if (inet_pton(AF_INET, SERVER, &serverAddr.sin_addr) != 1){
-        printf("Failed to convert server address to bytes in %s", __function__);
+        printf("Failed to convert server address to bytes");
         conn.err = CONNECTION_FAILED;
         return conn;
     }
 
-    if ((status = connect(cli_FD, (struct sockaddr*)&serverAddr, sizeof(serverAddr))) < 0){
+    if (connect(cli_FD, (struct sockaddr*) &serverAddr, sizeof(serverAddr)) < 0){
         printf("Connection to server failed");
         conn.err = CONNECTION_FAILED;
         return conn;
@@ -38,47 +34,34 @@ struct connection utilClientConnect(){
     return conn;
 }
 
-void utilClientCloseConnection(int cli_FD){
+void utilClientCloseConnection(int fd, MemoryStack *memoryStack){
     // Stop listening and sending
-    if (shutdown(cli_FD, 2) != 0){
-        printf("Failed to shutdown socket");
-        return SHUTDOWN_FAILED;
+    if (shutdown(fd, 2) != 0){
+        utilExitPanic(SHUTDOWN_FAILED, "Failed to shutdown socket",memoryStack);
     }
 
-    if (close(cli_FD) != 0){
-        printf("Failed to close socket");
-        return CLOSE_FAILED;
+    if (close(fd) != 0){
+        utilExitPanic(CLOSE_FAILED, "Failed to close socket", memoryStack);
     }
+}
 
-    return CLOSE_SUCCESSFUL;
-
-void utilClientSend(Request *request){
+void utilClientSend(Request *request, MemoryStack *memoryStack){
     char buf[512] = { 0 };
-    size_t bufLength = 512 - 1; // subtract 1 for null terminator
-    struct connection conn = clientConnect();
+    size_t bufLength = 512 - 1;
+    struct connection conn = utilClientConnect();
     
-    if (conn.err != NULL){
-        printf("No socket");
-        return SEND_FAILED;
+    if (conn.err != 0){
+        utilExitPanic(SEND_FAILED, "No Socket", memoryStack);
     }
     
-    if (send(conn.fd, request.data, request.length, 0) < 0){
-        printf("Failed to send data to socket");
-        return SEND_FAILED;
+    if (send(conn.fd, request->data, request->length, 0) < 0){
+        utilExitPanic(SEND_FAILED, "Failed to send data to socket", memoryStack);
     }
-    printf("[CLIENT]: Sent payload data: %s, of length: %d", request.data, request.length);
+    printf("[CLIENT]: Sent payload data: %s, of length: %d", request->data, request->length);
 
     if (read(conn.fd, buf, bufLength) < 0){
-        printf("Failed to read data from socket");
-        return RECV_FAILED;
+        utilExitPanic(RECV_FAILED, "Failed to read data from socket", memoryStack);
     }
 
-
-
-    if (clientCloseConnection(conn.fd) != CLOSE_SUCCESSFUL){
-        printf("Failed to close connection!");
-        return CONNECTION_CLOSE_ERROR;
-    }
-
-    return SEND_SUCCESSFUL;
+    utilClientCloseConnection(conn.fd, memoryStack);
 }
