@@ -1,15 +1,15 @@
 #include "utillib.h"
 
 void utilStackInit(MemoryStack *memoryStack){
-    memoryStack->head = NULL;
-    memoryStack->length = 0;
+    // Panics if memoryStack is bad
+    if (utilStackIsEmpty(memoryStack)){
+        memoryStack->head = NULL;
+        memoryStack->length = 0;
+    }
 }
 
 void utilStackPush(MemoryStack *memoryStack, void *ptr){
-    if (memoryStack == NULL){
-        printf("No Memory Stack");
-        exit(BAD_MEMORY_STACK);
-    }
+    int isEmpty = utilStackIsEmpty(memoryStack);
 
     Node *new = malloc(sizeof *new);
     if (new == NULL){
@@ -18,7 +18,7 @@ void utilStackPush(MemoryStack *memoryStack, void *ptr){
     new->data = ptr;
     new->next = NULL;
 
-    if (memoryStack->head == NULL){
+    if (isEmpty){
         memoryStack->head = new;
     }else{
         Node *current = memoryStack->head;
@@ -35,13 +35,13 @@ void utilStackPush(MemoryStack *memoryStack, void *ptr){
 }
 
 void utilStackFree(MemoryStack *memoryStack, void *ptr){
-    if (utilStackIsEmpty(memoryStack) != FALSE){
-        printf("No Memory Stack or No Allocations\n");
-        exit(BAD_MEMORY_STACK);
+    if (utilStackIsEmpty(memoryStack)){
+        utilExitPanic(BAD_MEMORY_STACK, "Memory Stack is empty\n", memoryStack);
     }
     if (ptr == NULL){
         utilExitPanic(FAKE_POINTER, "No Pointer\n", memoryStack);
     }
+
     int found = FALSE;
     Node *prev = memoryStack->head;
 
@@ -78,7 +78,8 @@ void utilStackFree(MemoryStack *memoryStack, void *ptr){
 // @INFO: Does not free the linked list, just the nodes. memoryStack must be freed manually
 void utilStackEmpty(MemoryStack *memoryStack){
     if (utilStackIsEmpty(memoryStack)){
-        printf("MemoryStack is already empty or doesn't exist");
+        free(memoryStack);
+        printf("MemoryStack is already empty");
         exit(BAD_MEMORY_STACK);
     }
 
@@ -117,8 +118,7 @@ void utilStackDump(MemoryStack *memoryStack){
 
 int utilStackIsEmpty(MemoryStack *memoryStack){
     if (memoryStack == NULL){
-        printf("No Memory Stack\n");
-        return BAD_MEMORY_STACK;
+        utilExitPanic(BAD_MEMORY_STACK, "No Memory Stack\n", NULL);
     }
     if (memoryStack->head == NULL){
         return TRUE;

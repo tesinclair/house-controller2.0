@@ -41,8 +41,8 @@ typedef struct Node{
     struct Node *next;
 } Node;
 
-typedef struct{
-    struct Node *head;
+typedef struct MemoryStack{
+    Node *head;
     size_t length;
 } MemoryStack;
 
@@ -88,6 +88,10 @@ void utilClientSend(Request *request, MemoryStack *memoryStack);
 
 void utilClientCloseConnection(int cli_FD, MemoryStack *memoryStack);
 
+
+/*
+ * @IMPORTANT: utilExitPanic cannot be called from utilStackEmpty
+*/
 
 // @Section: custom exit code
 

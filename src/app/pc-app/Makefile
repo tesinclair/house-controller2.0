@@ -18,7 +18,10 @@ $(TARGET): $(OBJECTS)
 %.o: %.c
 	$(CC) -c $< -o $@ $(CFLAGS)
 
-run:
+run-dev:
+	gdb ./main
+
+run: 
 	./main
 
 .PHONY: clean

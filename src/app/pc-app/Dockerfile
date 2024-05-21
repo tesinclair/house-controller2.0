@@ -3,7 +3,10 @@ FROM ubuntu:latest
 MAINTAINER taisinclair4@gmail.com
 
 RUN apt update 
-RUN apt install -y gcc make
+RUN apt install -y \
+    gdb \
+    x11-apps \
+    sudo
 
 COPY deps.txt /tmp/
 
@@ -13,3 +16,12 @@ COPY . /build
 WORKDIR /build
 
 RUN make build
+
+RUN useradd -ms /bin/bash dev && \
+    echo 'dev ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/dev
+
+USER dev
+
+WORKDIR /build
+
+CMD ["xeyes"]

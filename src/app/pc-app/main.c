@@ -3,9 +3,6 @@
 #include<GL/glut.h>
 #include<GL/gl.h>
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <ctype.h>
 #include <math.h>
 
@@ -27,14 +24,18 @@ GtkBuilder *builder = NULL;
 int main(int argc, char *argv[]){
     GtkWidget *window;
 
+    memoryStack = malloc(sizeof *memoryStack);
+
+    if (memoryStack == NULL){
+        utilExitPanic(EXIT_FAILURE, "No memory\n", NULL); 
+    }
     utilStackInit(memoryStack);
 
     gtk_init(&argc, &argv);
 
     builder = gtk_builder_new();
     if (gtk_builder_add_from_file(builder, "gui.glade", NULL) == 0){
-        g_print("gtk_builder_add_from_file FAILED\n");
-        return EXIT_FAILURE;
+        utilExitPanic(EXIT_FAILURE, "failed to get gtk builder\n", memoryStack);
     }
 
     window = GTK_WIDGET(gtk_builder_get_object(builder, "mWindow"));
