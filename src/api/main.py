@@ -5,7 +5,11 @@ from threading import Thread
 
 def handle_socket(queue):
     with GPIOSocket(queue) as s:
-        s.run()
+        try:
+            while True:
+                s.run()
+        except KeyboardInterrupt:
+            print("Exiting")
 
 def main():
     q = queue.Queue()
@@ -15,8 +19,8 @@ def main():
 
         thread.start()
 
-        while True:
-            with LedStrip(q) as controller:
+        with LedStrip(q) as controller:
+            while True:
                 if not controller.next(None):
                     break
 

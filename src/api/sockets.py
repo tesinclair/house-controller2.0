@@ -33,12 +33,14 @@ class GPIOSocket:
                 if not self.validate_ip():
                     print(f"[SERVER]: Refusing connection from {self.addr}")
                     self.remove_client()
+                    break
 
                 print(f"[SERVER]: Accepting connection from {self.addr}")
 
                 encoded_data = self.conn.recv(1024)
                 if not encoded_data:
                     self.remove_client() # No data sent
+                    break
 
                 self.data = encoded_data.decode("UTF-8")
 
@@ -46,18 +48,21 @@ class GPIOSocket:
                     print(f"[SERVER]: Recieved bad request: {self.data} from {self.addr}")
                     conn.sendall(bytes("BAD REQUEST", 'UTF-8'))
                     self.remove_client()
+                    break
             
                 print(f"[SERVER]: Recieved ok request: {self.data} from {self.addr}")
                 self.queue.put(self.data)
                 self.conn.sendall(bytes("OK", "UTF-8"))
                 print(f"[SERVER]: Request accepted. Removing {self.addr}")
                 self.remove_client()
+                break
 
             except Exception as e:
                 print(e)
                 if self.conn:
                     self.conn.sendall(bytes("500 - SERVERERROR", "UTF-8"))
                     self.remove_client()
+                    break
 
     def validate_ip(self):
         with open("hidden/whitelist.txt", "r") as f:

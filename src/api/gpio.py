@@ -131,7 +131,7 @@ class LedStrip():
                     self.pulse(pallete)
                 case "colorwheel":
                     self.light(arg1)
-                case "stop":
+                case "wait":
                     self.wait()
                 case "quit":
                     return False
