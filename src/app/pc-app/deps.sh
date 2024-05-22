@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Build essential should be covered by dockerfile
-DEPENDENCIES="packages.txt"
+DEPENDENCIES="deps.txt"
 
 echo "Installing Dependencies"
 

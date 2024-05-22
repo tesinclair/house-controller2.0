@@ -24,4 +24,3 @@ USER dev
 
 WORKDIR /build
 
-CMD ["xeyes"]

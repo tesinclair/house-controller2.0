@@ -1,11 +1,12 @@
 version: '3'
 services:
   build:
+    build: .
     environment:
       - DISPLAY=${DISPLAY}
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
-    build: .
+    network_mode: "host"
     command: ['make', 'run']
 
   build-dev:
@@ -14,8 +15,9 @@ services:
       - DISPLAY=${DISPLAY}
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
+    network_mode: "host"
     stdin_open: true
     tty: true
-    command: ['/bin/bash']
+    entrypoint: ['/bin/bash']
 
 
