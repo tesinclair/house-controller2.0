@@ -1,4 +1,3 @@
-#include<gtk/gtk.h>
 #include<GL/glu.h>
 #include<GL/glut.h>
 #include<GL/gl.h>
@@ -27,7 +26,7 @@ int main(int argc, char *argv[]){
     memoryStack = malloc(sizeof *memoryStack);
 
     if (memoryStack == NULL){
-        utilExitPanic(EXIT_FAILURE, "No memory\n", NULL); 
+        utilErrorPanic(EXIT_FAILURE, "No memory\n", NULL); 
     }
     utilStackInit(memoryStack);
 
@@ -35,7 +34,7 @@ int main(int argc, char *argv[]){
 
     builder = gtk_builder_new();
     if (gtk_builder_add_from_file(builder, "gui.glade", NULL) == 0){
-        utilExitPanic(EXIT_FAILURE, "failed to get gtk builder\n", memoryStack);
+        utilErrorPanic(EXIT_FAILURE, "failed to get gtk builder\n", memoryStack);
     }
 
     window = GTK_WIDGET(gtk_builder_get_object(builder, "mWindow"));
@@ -45,6 +44,7 @@ int main(int argc, char *argv[]){
     gtk_main();
 
     utilStackEmpty(memoryStack);
+    free(memoryStack);
 
     return EXIT_SUCCESS;
 }
@@ -60,7 +60,7 @@ void presetButtonClicked(GtkButton *button, __attribute__((unused)) gpointer poi
     req.data = malloc(req.length + 1);
 
     if (req.data == NULL){
-        utilExitPanic(EXIT_FAILURE, "No memory\n", memoryStack);
+        utilErrorPanic(EXIT_FAILURE, "No memory\n", memoryStack);
     }
     utilStackPush(memoryStack, (void *)req.data);
 
@@ -77,7 +77,7 @@ void setBrightnessClicked(__attribute__((unused)) GtkWidget *widget,
     GtkWidget *brightnessSlider = gtk_builder_get_object(builder, "brightnessAdjustment");
     
     if (brightnessSlider == NULL){
-        utilExitPanic(EXIT_FAILURE, "No brightness slider\n", memoryStack);
+        utilErrorPanic(EXIT_FAILURE, "No brightness slider\n", memoryStack);
     }
 
     int brightnessValue = (int)gtk_adjustment_get_value(GTK_ADJUSTMENT(brightnessSlider));
@@ -93,7 +93,7 @@ void setBrightnessClicked(__attribute__((unused)) GtkWidget *widget,
     req.data = malloc(req.length + 1);
 
     if (req.data == NULL){
-        utilExitPanic(EXIT_FAILURE, "No memory\n", memoryStack);
+        utilErrorPanic(EXIT_FAILURE, "No memory\n", memoryStack);
     }
     utilStackPush(memoryStack, (void *)req.data);
 

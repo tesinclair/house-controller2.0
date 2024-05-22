@@ -10,7 +10,7 @@ struct connection utilClientConnect(){
     int cli_FD;
 
     if ((cli_FD = socket(AF_INET, SOCK_STREAM, 0)) < 0){
-        printf("Failed to create socket");
+        g_print("Failed to create socket\n");
         conn.err = SOCKET_FAILED;
         return conn;
     }
@@ -19,13 +19,13 @@ struct connection utilClientConnect(){
     serverAddr.sin_port = htons(PORT);
 
     if (inet_pton(AF_INET, SERVER, &serverAddr.sin_addr) != 1){
-        printf("Failed to convert server address to bytes");
+        g_print("Failed to convert server address to bytes\n");
         conn.err = CONNECTION_FAILED;
         return conn;
     }
 
     if (connect(cli_FD, (struct sockaddr*) &serverAddr, sizeof(serverAddr)) < 0){
-        printf("Connection to server failed");
+        g_print("Connection to server failed\n");
         conn.err = CONNECTION_FAILED;
         return conn;
     }
@@ -37,11 +37,11 @@ struct connection utilClientConnect(){
 void utilClientCloseConnection(int fd, MemoryStack *memoryStack){
     // Stop listening and sending
     if (shutdown(fd, 2) != 0){
-        utilExitPanic(SHUTDOWN_FAILED, "Failed to shutdown socket",memoryStack);
+        utilErrorPanic(SHUTDOWN_FAILED, "Failed to shutdown socket\n",memoryStack);
     }
 
     if (close(fd) != 0){
-        utilExitPanic(CLOSE_FAILED, "Failed to close socket", memoryStack);
+        utilErrorPanic(CLOSE_FAILED, "Failed to close socket\n", memoryStack);
     }
 }
 
@@ -51,16 +51,16 @@ void utilClientSend(Request *request, MemoryStack *memoryStack){
     struct connection conn = utilClientConnect();
     
     if (conn.err != 0){
-        utilExitPanic(SEND_FAILED, "No Socket", memoryStack);
+        utilErrorPanic(SEND_FAILED, "No Socket\n", memoryStack);
     }
     
     if (send(conn.fd, request->data, request->length, 0) < 0){
-        utilExitPanic(SEND_FAILED, "Failed to send data to socket", memoryStack);
+        utilErrorPanic(SEND_FAILED, "Failed to send data to socket\n", memoryStack);
     }
-    printf("[CLIENT]: Sent payload data: %s, of length: %d", request->data, request->length);
+    g_print("[CLIENT]: Sent payload data: %s, of length: %d\n", request->data, request->length);
 
     if (read(conn.fd, buf, bufLength) < 0){
-        utilExitPanic(RECV_FAILED, "Failed to read data from socket", memoryStack);
+        utilErrorPanic(RECV_FAILED, "Failed to read data from socket\n", memoryStack);
     }
 
     utilClientCloseConnection(conn.fd, memoryStack);

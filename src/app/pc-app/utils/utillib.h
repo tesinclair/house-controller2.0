@@ -6,6 +6,8 @@
 #include<string.h>
 #include<unistd.h>
 
+#include<gtk/gtk.h>
+
 // @Section: memory manager defs
 
 // Memory allocation identifiers should always be in the scope: 
@@ -90,12 +92,12 @@ void utilClientCloseConnection(int cli_FD, MemoryStack *memoryStack);
 
 
 /*
- * @IMPORTANT: utilExitPanic cannot be called from utilStackEmpty
+ * @IMPORTANT: utilErrorPanic cannot be called from utilStackEmpty
 */
 
-// @Section: custom exit code
+// @Section: custom error handling 
 
-void utilExitPanic(int errCode, char *exitMsg, MemoryStack *memoryStack);
+void utilErrorPanic(int errCode, char *exitMsg, MemoryStack *memoryStack);
 
 #endif
 

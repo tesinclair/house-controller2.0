@@ -1,11 +1,11 @@
 #include "utillib.h"
 
 void utilStackInit(MemoryStack *memoryStack){
-    // Panics if memoryStack is bad
-    if (utilStackIsEmpty(memoryStack)){
-        memoryStack->head = NULL;
-        memoryStack->length = 0;
+    if (memoryStack == NULL){
+        utilErrorPanic(BAD_MEMORY_STACK, "No Memory Stack\n", NULL);
     }
+    memoryStack->head = NULL;
+    memoryStack->length = 0;
 }
 
 void utilStackPush(MemoryStack *memoryStack, void *ptr){
@@ -13,7 +13,7 @@ void utilStackPush(MemoryStack *memoryStack, void *ptr){
 
     Node *new = malloc(sizeof *new);
     if (new == NULL){
-        utilExitPanic(NO_MEMORY, "No Memory\n", memoryStack);
+        utilErrorPanic(NO_MEMORY, "No Memory\n", memoryStack);
     }
     new->data = ptr;
     new->next = NULL;
@@ -36,10 +36,10 @@ void utilStackPush(MemoryStack *memoryStack, void *ptr){
 
 void utilStackFree(MemoryStack *memoryStack, void *ptr){
     if (utilStackIsEmpty(memoryStack)){
-        utilExitPanic(BAD_MEMORY_STACK, "Memory Stack is empty\n", memoryStack);
+        utilErrorPanic(BAD_MEMORY_STACK, "Memory Stack is empty\n", memoryStack);
     }
     if (ptr == NULL){
-        utilExitPanic(FAKE_POINTER, "No Pointer\n", memoryStack);
+        utilErrorPanic(FAKE_POINTER, "No Pointer\n", memoryStack);
     }
 
     int found = FALSE;
@@ -71,16 +71,15 @@ void utilStackFree(MemoryStack *memoryStack, void *ptr){
     if (found == TRUE){
         memoryStack->length--;
     }else {
-        utilExitPanic(FAKE_POINTER, "Pointer not Found!\n", memoryStack);
+        utilErrorPanic(FAKE_POINTER, "Pointer not Found!\n", memoryStack);
     }
 }
 
 // @INFO: Does not free the linked list, just the nodes. memoryStack must be freed manually
 void utilStackEmpty(MemoryStack *memoryStack){
     if (utilStackIsEmpty(memoryStack)){
-        free(memoryStack);
-        printf("MemoryStack is already empty");
-        exit(BAD_MEMORY_STACK);
+        //g_print("INFO: Memory Stack already empty\n");
+        return;
     }
 
     Node *current = memoryStack->head;
@@ -100,17 +99,17 @@ void utilStackDump(MemoryStack *memoryStack){
     int isEmpty = utilStackIsEmpty(memoryStack);
 
     if (isEmpty){
-        printf("DEBUG: Stack is empty\n");
+        g_print("DEBUG: Stack is empty\n");
         return;
     }else if(isEmpty == BAD_MEMORY_STACK){
-        printf("DEBUG_ERROR: No memory stack provided\n");
+        g_print("DEBUG_ERROR: No memory stack provided\n");
         exit(BAD_MEMORY_STACK);
     }else{
         Node *current = memoryStack->head;
-        printf("DEBUG: MemoryStack Head: %p", current->data);
+        g_print("DEBUG: MemoryStack Head: %p", current->data);
         int index = 1;
         while ((current = current->next)){
-            printf("DEBUG: MemoryStack Index: %d, points to: %p", index, current->data);
+            g_print("DEBUG: MemoryStack Index: %d, points to: %p", index, current->data);
             index++;
         }
     }
@@ -118,7 +117,7 @@ void utilStackDump(MemoryStack *memoryStack){
 
 int utilStackIsEmpty(MemoryStack *memoryStack){
     if (memoryStack == NULL){
-        utilExitPanic(BAD_MEMORY_STACK, "No Memory Stack\n", NULL);
+        utilErrorPanic(BAD_MEMORY_STACK, "No Memory Stack\n", NULL);
     }
     if (memoryStack->head == NULL){
         return TRUE;
