@@ -64,7 +64,7 @@ void presetButtonClicked(GtkButton *button, __attribute__((unused)) gpointer poi
     }
     utilStackPush(memoryStack, (void *)req.data);
 
-    strncpy(req.data, reqMsg, reqMsgLen);
+    strncpy(req.data, reqMsg, reqMsgLen + 1);
     strncat(req.data, func, funcLen);
 
     utilClientSend(&req, memoryStack);

@@ -256,7 +256,7 @@
                         <child>
                           <object class="GtkButton" id="nightlightButton">
                             <property name="label" translatable="yes">Night Light</property>
-                            <property name="name">nightlight</property>
+                            <property name="name">nightLight</property>
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="receives-default">True</property>
@@ -270,7 +270,7 @@
                         <child>
                           <object class="GtkButton" id="virginlightsButton">
                             <property name="label" translatable="yes">Virgin Lights</property>
-                            <property name="name">virginlights</property>
+                            <property name="name">virginLights</property>
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="receives-default">True</property>
