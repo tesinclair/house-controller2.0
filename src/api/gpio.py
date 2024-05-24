@@ -119,7 +119,7 @@ class LedStrip():
                     self.collapse(pallete)
                 case "nightLight":
                     self.light(self.purple)
-                case "lights":
+                case "white":
                     self.light()
                 case "red":
                     self.light(self.red)
@@ -138,6 +138,7 @@ class LedStrip():
 
         elif code == "brightness":
             arg = float(arg)
+            arg = arg / 100
             if arg == 0:
                 arg = 0.005
             self.setBrightness(arg)

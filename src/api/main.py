@@ -25,7 +25,8 @@ def main():
                     break
 
     except Exception as e:
-        print("Exiting: {e}")
+        thread.join()
+        print(f"Exiting: {e}")
 
 if __name__ == "__main__":
     main()
