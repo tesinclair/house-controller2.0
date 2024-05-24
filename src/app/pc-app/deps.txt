@@ -1,7 +1,6 @@
 gcc
 make
 
-
 libgtk-3-dev
 libglib2.0-dev
 libgdk-pixbuf2.0-dev
@@ -10,6 +9,3 @@ libcairo2-dev
 libatk-bridge2.0-dev
 libffi-dev
 pkg-config
-libgl1-mesa-dev
-libglu1-mesa-dev
-freeglut3-dev

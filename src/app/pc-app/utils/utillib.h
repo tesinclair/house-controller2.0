@@ -5,6 +5,7 @@
 #include<stdio.h>
 #include<string.h>
 #include<unistd.h>
+#include<assert.h>
 
 #include<gtk/gtk.h>
 
@@ -35,6 +36,7 @@
 #define FALSE 0
 #define TRUE 1
 #endif
+
 
 // @Section Memory manager code
 
@@ -98,6 +100,25 @@ void utilClientCloseConnection(int cli_FD, MemoryStack *memoryStack);
 // @Section: custom error handling 
 
 void utilErrorPanic(int errCode, char *exitMsg, MemoryStack *memoryStack);
+
+void utilErrorAssert(int exp, char *failMsg, int *errCode, MemoryStack *memoryStack);
+
+// @Section: custom light functions
+
+#define NUMLIGHTS 100
+
+typedef struct{
+    guint width;
+    guint height;
+    cairo_t *cr;
+    double brightness;
+} LightDisplayArea;
+
+void utilLightWait(LightDisplayArea *lda);
+
+void utilLightWhite(LightDisplayArea *lda);
+
+void utilLightUpdateColor(double (*color)[], double brightness);
 
 #endif
 

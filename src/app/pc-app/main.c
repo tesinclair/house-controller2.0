@@ -1,7 +1,3 @@
-#include<GL/glu.h>
-#include<GL/glut.h>
-#include<GL/gl.h>
-
 #include <ctype.h>
 #include <math.h>
 
@@ -13,22 +9,33 @@ void customColorButtonClicked(GtkWidget *widget, __attribute__((unused)) gpointe
 void searchScriptButtonClicked(GtkWidget *widget, __attribute__((unused)) gpointer pointer);
 void saveButtonClicked(GtkWidget *widget, __attribute__((unused)) gpointer pointer);
 void openButtonClicked(GtkWidget *widget, __attribute__((unused)) gpointer pointer);
-gboolean renderAiBubble(GtkGLArea *area, __attribute__((unused)) GdkGLContext *context);
+void runBtnClicked(GtkWidget *widget, __attribute__((unused)) gpointer pointer);
+gboolean drawLightVis(GtkWidget *widget, cairo_t *cr, __attribute__((unused)) gpointer pointer);
+gboolean drawLightCompiled(GtkWidget *widget, cairo_t *cr, __attribute__((unused)) gpointer pointer);
 void windowDelete(__attribute__((unused)) GtkWidget *widget, 
         __attribute__((unused)) GdkEvent *event, __attribute__((unused)) gpointer data);
+void updateState(const gchar *func, size_t len);
+
+// All state should be held here
+typedef struct{
+    void (*activeFunction)(LightDisplayArea *lda); 
+    double brightness;
+} State;
 
 MemoryStack *memoryStack;
 GtkBuilder *builder = NULL;
+
+State state;
 
 int main(int argc, char *argv[]){
     GtkWidget *window;
 
     memoryStack = malloc(sizeof *memoryStack);
-
-    if (memoryStack == NULL){
-        utilErrorPanic(EXIT_FAILURE, "No memory\n", NULL); 
-    }
+    utilErrorAssert(memoryStack != NULL, "No memory\n", (int *)NO_MEMORY, memoryStack);
     utilStackInit(memoryStack);
+
+    state.activeFunction = utilLightWait;
+    state.brightness = 1.0;
 
     gtk_init(&argc, &argv);
 
@@ -58,10 +65,8 @@ void presetButtonClicked(GtkButton *button, __attribute__((unused)) gpointer poi
 
     req.length = reqMsgLen + funcLen;
     req.data = malloc(req.length + 1);
+    utilErrorAssert(req.data != NULL, "No memory\n", (int *)NO_MEMORY, memoryStack);
 
-    if (req.data == NULL){
-        utilErrorPanic(EXIT_FAILURE, "No memory\n", memoryStack);
-    }
     utilStackPush(memoryStack, (void *)req.data);
 
     strncpy(req.data, reqMsg, reqMsgLen + 1);
@@ -70,15 +75,15 @@ void presetButtonClicked(GtkButton *button, __attribute__((unused)) gpointer poi
     utilClientSend(&req, memoryStack);
 
     utilStackFree(memoryStack, req.data);
+
+    updateState(func, funcLen);
 }
 
 void setBrightnessClicked(__attribute__((unused)) GtkWidget *widget,
                             __attribute__((unused)) gpointer pointer){
     GtkWidget *brightnessSlider = gtk_builder_get_object(builder, "brightnessAdjustment");
     
-    if (brightnessSlider == NULL){
-        utilErrorPanic(EXIT_FAILURE, "No brightness slider\n", memoryStack);
-    }
+    utilErrorAssert(brightnessSlider != NULL, "No brightness slider\n", NULL, memoryStack);
 
     int brightnessValue = (int)gtk_adjustment_get_value(GTK_ADJUSTMENT(brightnessSlider));
     char brightnessValStr[10];
@@ -92,15 +97,16 @@ void setBrightnessClicked(__attribute__((unused)) GtkWidget *widget,
     req.length = reqMsgLen + brightnessValLen;
     req.data = malloc(req.length + 1);
 
-    if (req.data == NULL){
-        utilErrorPanic(EXIT_FAILURE, "No memory\n", memoryStack);
-    }
+    utilErrorAssert(req.data != NULL, "No memory\n", (int *)NO_MEMORY, memoryStack);
     utilStackPush(memoryStack, (void *)req.data);
 
     strncpy(req.data, reqMsg, reqMsgLen);
     strncat(req.data, brightnessValStr, brightnessValLen);
 
     utilClientSend(&req, memoryStack);
+
+    state.brightness = (double)brightnessValue / 100;
+
     utilStackFree(memoryStack, req.data);
 }
 
@@ -120,11 +126,38 @@ void openButtonClicked(GtkWidget *widget, __attribute__((unused)) gpointer point
     g_print("openButtonClicked");
 }
 
-gboolean renderAiBubble(GtkGLArea *area, __attribute__((unused)) GdkGLContext *context){
-    return TRUE;
+void runBtnClicked(GtkWidget *widget, __attribute__((unused)) gpointer pointer){
+    g_print("Run Button Clicked");
+}
+
+gboolean drawLightVis(GtkWidget *widget, cairo_t *cr, __attribute__((unused)) gpointer pointer){
+    guint width, height;
+
+    width = gtk_widget_get_allocated_width(widget);
+    height = gtk_widget_get_allocated_height(widget);
+
+    LightDisplayArea lda = {.width = width, .height = height, .cr = cr, .brightness = state.brightness};
+
+    state.activeFunction(&lda);
+    
+    return FALSE;
+}
+
+gboolean drawLightCompiled(GtkWidget *widget, cairo_t *cr, __attribute__((unused)) gpointer pointer){
+    return FALSE;
 }
 
 void windowDelete(__attribute__((unused)) GtkWidget *widget, 
         __attribute__((unused)) GdkEvent *event, __attribute__((unused)) gpointer data){
     gtk_main_quit();
+}
+
+void updateState(const gchar *func, size_t len){
+    // I will fix this later, but i need something working for now, so I will do a big strncmp
+
+    if (strncmp(func, "wait", len) == 0){
+        state.activeFunction = utilLightWait;
+    }else if (strncmp(func, "white", len) == 0){
+        state.activeFunction = utilLightWhite;
+    }
 }

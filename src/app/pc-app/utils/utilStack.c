@@ -12,9 +12,8 @@ void utilStackPush(MemoryStack *memoryStack, void *ptr){
     int isEmpty = utilStackIsEmpty(memoryStack);
 
     Node *new = malloc(sizeof *new);
-    if (new == NULL){
-        utilErrorPanic(NO_MEMORY, "No Memory\n", memoryStack);
-    }
+    utilErrorAssert(new != NULL, "No Memory\n", (int *)NO_MEMORY, memoryStack);
+
     new->data = ptr;
     new->next = NULL;
 
@@ -27,10 +26,8 @@ void utilStackPush(MemoryStack *memoryStack, void *ptr){
             Node *temp = current->next;
             current = temp;
         }
-
         current->next = new;
     }
-
     memoryStack->length++;
 }
 
@@ -38,9 +35,7 @@ void utilStackFree(MemoryStack *memoryStack, void *ptr){
     if (utilStackIsEmpty(memoryStack)){
         utilErrorPanic(BAD_MEMORY_STACK, "Memory Stack is empty\n", memoryStack);
     }
-    if (ptr == NULL){
-        utilErrorPanic(FAKE_POINTER, "No Pointer\n", memoryStack);
-    }
+    utilErrorAssert(ptr != NULL, "No Pointer\n", (int *)FAKE_POINTER, memoryStack);
 
     int found = FALSE;
     Node *prev = memoryStack->head;
@@ -117,7 +112,7 @@ void utilStackDump(MemoryStack *memoryStack){
 
 int utilStackIsEmpty(MemoryStack *memoryStack){
     if (memoryStack == NULL){
-        utilErrorPanic(BAD_MEMORY_STACK, "No Memory Stack\n", NULL);
+        return BAD_MEMORY_STACK;
     }
     if (memoryStack->head == NULL){
         return TRUE;

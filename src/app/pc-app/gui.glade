@@ -43,15 +43,9 @@
                 <property name="orientation">vertical</property>
                 <property name="spacing">5</property>
                 <child>
-                  <object class="GtkGLArea" id="aiMainBubble">
-                    <property name="height-request">450</property>
+                  <object class="GtkDrawingArea" id="AI">
                     <property name="visible">True</property>
-                    <property name="app-paintable">True</property>
                     <property name="can-focus">False</property>
-                    <property name="margin-start">75</property>
-                    <property name="margin-end">76</property>
-                    <property name="vexpand">True</property>
-                    <signal name="render" handler="renderAiBubble" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -71,6 +65,7 @@
                     <property name="margin-bottom">50</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
+                    <signal name="draw" handler="drawLightVis" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -173,20 +168,6 @@
                       <packing>
                         <property name="left-attach">2</property>
                         <property name="top-attach">2</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkGLArea" id="aiBubbl">
-                        <property name="height-request">125</property>
-                        <property name="visible">True</property>
-                        <property name="app-paintable">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="has-depth-buffer">True</property>
-                        <signal name="render" handler="renderAiBubble" swapped="no"/>
-                      </object>
-                      <packing>
-                        <property name="left-attach">2</property>
-                        <property name="top-attach">0</property>
                       </packing>
                     </child>
                     <child>
@@ -393,6 +374,16 @@
                         <property name="top-attach">0</property>
                       </packing>
                     </child>
+                    <child>
+                      <object class="GtkDrawingArea">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                      </object>
+                      <packing>
+                        <property name="left-attach">2</property>
+                        <property name="top-attach">0</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -412,6 +403,7 @@
                     <property name="margin-bottom">50</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
+                    <signal name="draw" handler="drawLightVis" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -443,20 +435,6 @@
                     <property name="row-spacing">25</property>
                     <property name="column-spacing">25</property>
                     <child>
-                      <object class="GtkGLArea" id="aiBubbleCustom">
-                        <property name="width-request">150</property>
-                        <property name="height-request">150</property>
-                        <property name="visible">True</property>
-                        <property name="app-paintable">True</property>
-                        <property name="can-focus">False</property>
-                        <signal name="render" handler="renderAiBubble" swapped="no"/>
-                      </object>
-                      <packing>
-                        <property name="left-attach">2</property>
-                        <property name="top-attach">0</property>
-                      </packing>
-                    </child>
-                    <child>
                       <object class="GtkDrawingArea">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
@@ -474,20 +452,6 @@
                       <packing>
                         <property name="left-attach">1</property>
                         <property name="top-attach">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkScale">
-                        <property name="width-request">424</property>
-                        <property name="visible">True</property>
-                        <property name="can-focus">True</property>
-                        <property name="margin-start">20</property>
-                        <property name="margin-end">20</property>
-                        <property name="round-digits">1</property>
-                      </object>
-                      <packing>
-                        <property name="left-attach">0</property>
-                        <property name="top-attach">2</property>
                       </packing>
                     </child>
                     <child>
@@ -533,21 +497,6 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkGLArea" id="colorWheel">
-                        <property name="width-request">150</property>
-                        <property name="height-request">250</property>
-                        <property name="visible">True</property>
-                        <property name="app-paintable">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="margin-start">75</property>
-                        <property name="margin-end">75</property>
-                      </object>
-                      <packing>
-                        <property name="left-attach">0</property>
-                        <property name="top-attach">1</property>
-                      </packing>
-                    </child>
-                    <child>
                       <object class="GtkButtonBox">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
@@ -575,6 +524,36 @@
                         <property name="top-attach">1</property>
                       </packing>
                     </child>
+                    <child>
+                      <object class="GtkDrawingArea">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                      </object>
+                      <packing>
+                        <property name="left-attach">2</property>
+                        <property name="top-attach">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkDrawingArea" id="colorWheel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                      </object>
+                      <packing>
+                        <property name="left-attach">0</property>
+                        <property name="top-attach">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkDrawingArea">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                      </object>
+                      <packing>
+                        <property name="left-attach">0</property>
+                        <property name="top-attach">2</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -594,6 +573,7 @@
                     <property name="margin-bottom">50</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
+                    <signal name="draw" handler="drawLightVis" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -653,24 +633,11 @@
                     <property name="hexpand">True</property>
                     <property name="orientation">vertical</property>
                     <child>
-                      <object class="GtkGLArea" id="aiBubbleCreate">
-                        <property name="height-request">150</property>
-                        <property name="visible">True</property>
-                        <property name="app-paintable">True</property>
-                        <property name="can-focus">False</property>
-                        <signal name="render" handler="renderAiBubble" swapped="no"/>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkDrawingArea">
+                      <object class="GtkDrawingArea" id="LightDisplay">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="vexpand">True</property>
+                        <signal name="draw" handler="drawLightCompiled" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -709,6 +676,20 @@
                             <property name="expand">False</property>
                             <property name="fill">True</property>
                             <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="runBtn">
+                            <property name="label" translatable="yes">Run</property>
+                            <property name="visible">True</property>
+                            <property name="can-focus">True</property>
+                            <property name="receives-default">True</property>
+                            <signal name="clicked" handler="runBtnClicked" swapped="no"/>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">2</property>
                           </packing>
                         </child>
                       </object>
