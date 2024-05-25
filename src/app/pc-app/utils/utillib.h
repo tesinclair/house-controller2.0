@@ -105,18 +105,23 @@ void utilErrorAssert(int exp, char *failMsg, int *errCode, MemoryStack *memorySt
 
 // @Section: custom light functions
 
-#define NUMLIGHTS 100
+#define NUM_LIGHTS 100
 
 typedef struct{
     guint width;
     guint height;
     cairo_t *cr;
     double brightness;
+    size_t iter;
 } LightDisplayArea;
 
 void utilLightWait(LightDisplayArea *lda);
 
 void utilLightWhite(LightDisplayArea *lda);
+
+void utilLightVirginLights(LightDisplayArea *lda);
+
+void utilLightFlow(LightDisplayArea *lda);
 
 void utilLightUpdateColor(double (*color)[], double brightness);
 

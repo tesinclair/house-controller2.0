@@ -392,18 +392,9 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkDrawingArea" id="lightVis1">
-                    <property name="height-request">100</property>
+                  <object class="GtkDrawingArea">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="valign">end</property>
-                    <property name="margin-start">30</property>
-                    <property name="margin-end">30</property>
-                    <property name="margin-top">50</property>
-                    <property name="margin-bottom">50</property>
-                    <property name="hexpand">True</property>
-                    <property name="vexpand">True</property>
-                    <signal name="draw" handler="drawLightVis" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -562,18 +553,9 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkDrawingArea" id="lightVis2">
-                    <property name="height-request">100</property>
+                  <object class="GtkDrawingArea">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="valign">end</property>
-                    <property name="margin-start">30</property>
-                    <property name="margin-end">30</property>
-                    <property name="margin-top">50</property>
-                    <property name="margin-bottom">50</property>
-                    <property name="hexpand">True</property>
-                    <property name="vexpand">True</property>
-                    <signal name="draw" handler="drawLightVis" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
