@@ -189,24 +189,21 @@ class LedStrip():
         while self.check():
             i = i % 100
             offset = i
-            redL = (0 + offset)
-            redR = ((self.numPixels//3 + offset) - 1)
-            greenL = (self.numPixels//3 + offset)
-            greenR = (((self.numPixels * 2)//3 + offset) - 1)
-            blueL = ((self.numPixels * 2)//3 + offset)
-            blueR = ((self.numPixels + offset) - 1)
+            redL = 0 + offset
+            redR = (self.numPixels//3 + offset) - 1
+            greenL = self.numPixels//3 + offset
+            greenR = ((self.numPixels * 2)//3 + offset) - 1
+            blueL = (self.numPixels * 2)//3 + offset
+            blueR = (self.numPixels + offset) - 1
 
             for j in range(redL, redR):
-                temp = j
-                temp = temp % 100
+                temp = j % 100
                 self.pixels[temp] = tuple([round(x*self.brightness) for x in self.red])
             for j in range(greenL, greenR):
-                temp = j
-                temp = temp % 100
+                temp = j % 100
                 self.pixels[temp] = tuple([round(x*self.brightness) for x in self.green])
             for j in range(blueL, blueR):
-                temp = j
-                temp = temp % 100
+                temp = j % 100
                 self.pixels[temp] = tuple([round(x*self.brightness) for x in self.blue])
 
             self.pixels.show()
