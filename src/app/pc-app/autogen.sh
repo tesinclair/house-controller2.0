@@ -4,3 +4,4 @@ fi
 
 cmake -B build
 cmake --build build/
+cp src/*.glade build/

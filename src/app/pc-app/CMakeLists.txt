@@ -48,6 +48,12 @@ target_link_libraries(
     m
 )
 
+target_link_directories(
+    house-controller
+    PRIVATE
+    ${LIGHTS_DSL_LIBDIR}
+)
+
 target_include_directories(
     house-controller
     PRIVATE
