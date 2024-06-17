@@ -1,8 +1,8 @@
 PACKAGE = $(shell which pkg-config)
 
 CC = gcc
-CFLAGS = -g -Wall $(shell $(PACKAGE) --cflags gtk+-3.0)
-LDFLAGS = -rdynamic -lm $(shell $(PACKAGE) --libs gtk+-3.0)
+CFLAGS = -g -Wall $(shell $(PACKAGE) --cflags gtk+-3.0 lights-dsl)
+LDFLAGS = -rdynamic -lm $(shell $(PACKAGE) --libs gtk+-3.0 lights-dsl)
 
 SOURCES = main.c utils/utilClient.c utils/utilStack.c utils/utilError.c utils/utilLight.c
 OBJECTS = $(SOURCES:.c=.o)
@@ -10,20 +10,14 @@ TARGET = main
 
 .PRECIOUS: $(SOURCES)
 
-build: $(TARGET)
+all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
 	$(CC) $^ -o $@ $(LDFLAGS)
 
-%.o: %.c
+%.o: %.c clean
 	$(CC) -c $< -o $@ $(CFLAGS)
-
-run-dev:
-	gdb ./main
-
-run: 
-	./main
 
 .PHONY: clean
 clean:
-	rm -f $(OBJECTS) $(TARGET) *.glade~
+	rm -rf $(OBJECTS) $(TARGET) *.glade~

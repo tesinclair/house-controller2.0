@@ -575,26 +575,26 @@
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <child>
-                  <object class="GtkNotebook">
-                    <property name="width-request">750</property>
+                  <object class="GtkScrolledWindow">
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
-                    <property name="margin-start">25</property>
-                    <property name="margin-end">25</property>
-                    <property name="margin-top">25</property>
-                    <property name="margin-bottom">25</property>
-                    <property name="show-tabs">False</property>
+                    <property name="shadow-type">in</property>
+                    <property name="min-content-width">700</property>
                     <child>
-                      <object class="GtkTextView">
+                      <object class="GtkViewport">
                         <property name="visible">True</property>
-                        <property name="can-focus">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="margin-start">10</property>
+                        <property name="margin-end">10</property>
+                        <property name="margin-top">10</property>
+                        <property name="margin-bottom">10</property>
+                        <child>
+                          <object class="GtkTextView" id="lights-dsl-text-view">
+                            <property name="visible">True</property>
+                            <property name="can-focus">True</property>
+                          </object>
+                        </child>
                       </object>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <placeholder/>
                     </child>
                   </object>
                   <packing>
@@ -638,7 +638,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="receives-default">True</property>
-                            <signal name="clicked" handler="saveButtonClicked" swapped="no"/>
+                            <signal name="clicked" handler="saveButtonClicked" object="lights-dsl-text-view" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -652,7 +652,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="receives-default">True</property>
-                            <signal name="clicked" handler="openButtonClicked" swapped="no"/>
+                            <signal name="clicked" handler="openButtonClicked" object="lights-dsl-text-view" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>

@@ -1,33 +1,4 @@
-#include <ctype.h>
-#include <math.h>
-
-#include"utils/utillib.h"
-
-void presetButtonClicked(GtkButton *button, __attribute__((unused)) gpointer pointer);
-void setBrightnessClicked(GtkWidget *widget, __attribute__((unused)) gpointer pointer);
-void customColorButtonClicked(GtkWidget *widget, __attribute__((unused)) gpointer pointer);
-void searchScriptButtonClicked(GtkWidget *widget, __attribute__((unused)) gpointer pointer);
-void saveButtonClicked(GtkWidget *widget, __attribute__((unused)) gpointer pointer);
-void openButtonClicked(GtkWidget *widget, __attribute__((unused)) gpointer pointer);
-void runBtnClicked(GtkWidget *widget, __attribute__((unused)) gpointer pointer);
-gboolean drawLightVis(GtkWidget *widget, cairo_t *cr, __attribute__((unused)) gpointer pointer);
-gboolean drawLightCompiled(GtkWidget *widget, cairo_t *cr, __attribute__((unused)) gpointer pointer);
-void windowDelete(__attribute__((unused)) GtkWidget *widget, 
-        __attribute__((unused)) GdkEvent *event, __attribute__((unused)) gpointer data);
-void updateState(const gchar *func, size_t len);
-static gboolean lightVisCallback(gpointer data);
-
-// All state should be held here
-typedef struct{
-    void (*activeFunction)(LightDisplayArea *lda); 
-    double brightness;
-} State;
-
-MemoryStack *memoryStack;
-GtkBuilder *builder = NULL;
-size_t iter;
-
-State state;
+#include "app.h"
 
 int main(int argc, char *argv[]){
     GtkWidget *window;
@@ -127,12 +98,69 @@ void searchScriptButtonClicked(GtkWidget *widget, __attribute__((unused)) gpoint
     g_print("searchScriptButtonClicked");
 }
 
-void saveButtonClicked(GtkWidget *widget, __attribute__((unused)) gpointer pointer){
-    g_print("saveButtonClicked");
+void saveButtonClicked(GtkWidget *widget, gpointer text_view){
+    GtkWidget *dialog;
+    dialog = gtk_file_chooser_dialog_new("Save File",
+                                        GTK_WINDOW(gtk_widget_get_toplevel(widget)),
+                                        GTK_FILE_CHOOSER_ACTION_SAVE,
+                                        "_Cancel", GTK_RESPONSE_CANCEL,
+                                        "_Save", GTK_RESPONSE_ACCEPT,
+                                        NULL
+                                        );
+
+    gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog), "/home/blyk/lightsDSL/examples");
+    gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER(dialog), TRUE);
+    
+    if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT){
+        char *filename;
+        GtkTextBuffer *buf;
+        GtkTextIter start, end;
+        char *contents;
+
+        filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+        buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(text_view));
+        gtk_text_buffer_get_bounds(buf, &start, &end);
+        contents = gtk_text_buffer_get_text(buf, &start, &end, FALSE);
+
+        g_file_set_contents(filename, contents, -1, NULL);
+
+        g_free(contents);
+        g_free(filename);
+    }
+    gtk_widget_destroy(dialog);
+
 }
 
-void openButtonClicked(GtkWidget *widget, __attribute__((unused)) gpointer pointer){
-    g_print("openButtonClicked");
+void openButtonClicked(GtkWidget *widget, gpointer text_view){
+    GtkWidget *dialog;
+    dialog = gtk_file_chooser_dialog_new("Open File", 
+                                        GTK_WINDOW(gtk_widget_get_toplevel(widget)),
+                                        GTK_FILE_CHOOSER_ACTION_OPEN,
+                                        "_Cancel", GTK_RESPONSE_CANCEL,
+                                        "_Open", GTK_RESPONSE_ACCEPT,
+                                        NULL
+                                        );
+
+    gtk_file_chooser_set_current_folder(
+                                    GTK_FILE_CHOOSER(dialog),
+                                    "/home/blyk/workspace/lightsDSL/examples"
+                                    );
+
+    if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT){
+        char *filename;
+        char *contents;
+        gsize length;
+        GtkTextBuffer *buf;
+
+        filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+        if (g_file_get_contents(filename, &contents, &length, NULL)){
+            buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(text_view));
+            gtk_text_buffer_set_text(buf, contents, length);
+            g_free(contents);
+        }
+        g_free(filename);
+    }
+    gtk_widget_destroy(dialog);
 }
 
 void runBtnClicked(GtkWidget *widget, __attribute__((unused)) gpointer pointer){
