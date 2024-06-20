@@ -1,8 +1,26 @@
 #include "app.h"
 
+MemoryStack *memoryStack;
+GtkBuilder *builder = NULL;
+
+// Used for light display (the current iterations)
+size_t iter;
+State state;
+
+// The important directories
+char scripts_dir[MAX_PATH_LEN];
+char hc_app_dir[MAX_PATH_LEN];
+
 int main(int argc, char *argv[]){
     GtkWidget *window;
     GtkWidget *lightVis;
+    FILE *fptr;
+
+    // Define the directories
+    fptr = fopen(HC_DIRECTORY_PATH_LOC, "r");
+    fgets(hc_app_dir, MAX_PATH_LEN - 1, fptr);
+    fptr = fopen(HC_SCRIPTS_PATH_LOC, "r");
+    fgets(scripts_dir, MAX_PATH_LEN - 1, fptr);
 
     memoryStack = malloc(sizeof *memoryStack);
     utilErrorAssert(memoryStack != NULL, "No memory\n", (int *)NO_MEMORY, memoryStack);
@@ -164,7 +182,6 @@ void openButtonClicked(GtkWidget *widget, gpointer text_view){
 }
 
 void runBtnClicked(GtkWidget *widget, __attribute__((unused)) gpointer pointer){
-    g_print("Run Button Clicked");
 }
 
 gboolean drawLightVis(GtkWidget *widget, cairo_t *cr, __attribute__((unused)) gpointer pointer){

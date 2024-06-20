@@ -7,6 +7,11 @@
 
 #include "utils/utillib.h"
 
+/// @macros:
+#define MAX_PATH_LEN 260
+#define HC_DIRECTORY_PATH_LOC "/var/tmp/house-controller/hc_home.dir_txt"
+#define HC_SCRIPTS_PATH_LOC "/var/tmp/house-controller/script.dir_txt"
+
 /// @params:
 ///     button: The preset button
 /// @purpose: 
@@ -96,11 +101,5 @@ typedef struct{
     void (*activeFunction)(LightDisplayArea *lda); 
     double brightness;
 } State;
-
-/// @GLOBALS
-MemoryStack *memoryStack;
-GtkBuilder *builder = NULL;
-size_t iter;
-State state;
 
 #endif
