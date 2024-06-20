@@ -90,6 +90,13 @@ class GPIOSocket:
 
         # For now just allow all brightness
         if key == "brightness":
+            lower_bound, upper_bound = (int(x) for x in allowed_data.split("-"))
+            if val > upper_bound or val < lower_bound:
+                return False
+
+        if key == "colorwheel":
+            tokens = allowed_data.split(" ")
+
             return True
 
         if val not in allowed_data:

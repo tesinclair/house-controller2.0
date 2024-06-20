@@ -1,4 +1,5 @@
 {
 	"func": ["nightLight", "collapse", "virginLights", "flow", "alternate", "pulse", "red", "green", "blue", "white", "wait", "lights"],
-	"brightness": "float" 
+	"brightness": "0-1",
+    "colorwheel": "( 0-255 , 0-255 , 0-255 )" 
 }

@@ -108,8 +108,12 @@ void setBrightnessClicked(__attribute__((unused)) GtkWidget *widget,
     utilStackFree(memoryStack, req.data);
 }
 
-void customColorButtonClicked(GtkWidget *widget, __attribute__((unused)) gpointer pointer){
-    g_print("customColorButtonClicked");
+void customColorButtonClicked(GtkWidget *widget, gpointer data){
+    GdkRGBA customColor;
+
+    gtk_color_chooser_get_rgba(GTK_COLOR_CHOOSER(data), &customColor);
+
+    g_print("Selected color: (%d, %d, %d)", round(customColor.red * 255), round(customColor.green * 255), round(customColor.blue * 255));
 }
 
 void searchScriptButtonClicked(GtkWidget *widget, __attribute__((unused)) gpointer pointer){
@@ -126,7 +130,7 @@ void saveButtonClicked(GtkWidget *widget, gpointer text_view){
                                         NULL
                                         );
 
-    gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog), "/home/blyk/lightsDSL/examples");
+    gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog), scripts_dir);
     gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER(dialog), TRUE);
     
     if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT){
@@ -161,7 +165,7 @@ void openButtonClicked(GtkWidget *widget, gpointer text_view){
 
     gtk_file_chooser_set_current_folder(
                                     GTK_FILE_CHOOSER(dialog),
-                                    "/home/blyk/workspace/lightsDSL/examples"
+                                    scripts_dir 
                                     );
 
     if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT){
