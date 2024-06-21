@@ -106,8 +106,9 @@ class LedStrip():
             pallete = random.choice(self.colors)
 
             if arg.startswith("colorwheel"):
-                arg, arg1 = arg.split(",")
+                arg, arg1 = arg.split("#")
                 arg1 = ast.literal_eval(arg1)
+                arg1 = (arg1[0], arg1[2], arg1[1])
             match arg:
                 case "flow":
                     self.flow(pallete)
