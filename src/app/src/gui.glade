@@ -43,50 +43,8 @@
                 <property name="orientation">vertical</property>
                 <property name="spacing">5</property>
                 <child>
-                  <object class="GtkDrawingArea" id="AI">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkDrawingArea" id="lightVis">
-                    <property name="height-request">100</property>
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <property name="valign">end</property>
-                    <property name="margin-start">30</property>
-                    <property name="margin-end">30</property>
-                    <property name="margin-top">50</property>
-                    <property name="margin-bottom">50</property>
-                    <property name="hexpand">True</property>
-                    <property name="vexpand">True</property>
-                    <signal name="draw" handler="drawLightVis" swapped="no"/>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">2</property>
-                  </packing>
-                </child>
-              </object>
-              <packing>
-                <property name="name">Home</property>
-                <property name="title" translatable="yes">HOME</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkBox" id="presetsContainer">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="orientation">vertical</property>
-                <child>
                   <!-- n-columns=3 n-rows=3 -->
-                  <object class="GtkGrid" id="presetButtonGrid">
+                  <object class="GtkGrid" id="presetButtonGrid1">
                     <property name="height-request">450</property>
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
@@ -97,7 +55,7 @@
                     <property name="row-spacing">30</property>
                     <property name="column-spacing">50</property>
                     <child>
-                      <object class="GtkScale" id="brightnessScroller">
+                      <object class="GtkScale" id="brightnessScroller1">
                         <property name="width-request">400</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
@@ -106,7 +64,7 @@
                         <property name="upper-stepper-sensitivity">on</property>
                         <property name="show-fill-level">True</property>
                         <property name="fill-level">100</property>
-                        <property name="round-digits">1</property>
+                        <property name="round-digits">0</property>
                         <property name="digits">0</property>
                         <property name="value-pos">right</property>
                       </object>
@@ -121,7 +79,7 @@
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="receives-default">True</property>
-                        <signal name="clicked" handler="setBrightnessClicked" swapped="no"/>
+                        <signal name="clicked" handler="setBrightnessClicked" object="brightnessScroller1" swapped="no"/>
                       </object>
                       <packing>
                         <property name="left-attach">1</property>
@@ -156,7 +114,6 @@
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="receives-default">True</property>
-                            <signal name="clicked" handler="presetButtonClicked" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -172,14 +129,14 @@
                     </child>
                     <child>
                       <!-- n-columns=2 n-rows=5 -->
-                      <object class="GtkGrid" id="buttonContainer">
+                      <object class="GtkGrid" id="buttonContainer1">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="margin-start">100</property>
                         <property name="row-spacing">5</property>
                         <property name="column-spacing">5</property>
                         <child>
-                          <object class="GtkButton" id="flowButton">
+                          <object class="GtkButton" id="flowButton1">
                             <property name="label" translatable="yes">Flow</property>
                             <property name="name">flow</property>
                             <property name="visible">True</property>
@@ -193,7 +150,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkButton" id="collapseButton">
+                          <object class="GtkButton" id="collapseButton1">
                             <property name="label" translatable="yes">Collapse</property>
                             <property name="name">collapse</property>
                             <property name="visible">True</property>
@@ -207,7 +164,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkButton" id="alternateButton">
+                          <object class="GtkButton" id="alternateButton1">
                             <property name="label" translatable="yes">Alternate</property>
                             <property name="name">alternate</property>
                             <property name="visible">True</property>
@@ -221,7 +178,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkButton" id="pulseButton">
+                          <object class="GtkButton" id="pulseButton1">
                             <property name="label" translatable="yes">Pulse</property>
                             <property name="name">pulse</property>
                             <property name="visible">True</property>
@@ -235,7 +192,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkButton" id="nightlightButton">
+                          <object class="GtkButton" id="nightlightButton1">
                             <property name="label" translatable="yes">Night Light</property>
                             <property name="name">nightLight</property>
                             <property name="visible">True</property>
@@ -249,7 +206,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkButton" id="virginlightsButton">
+                          <object class="GtkButton" id="virginlightsButton1">
                             <property name="label" translatable="yes">Virgin Lights</property>
                             <property name="name">virginLights</property>
                             <property name="visible">True</property>
@@ -263,7 +220,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkButton" id="redButton">
+                          <object class="GtkButton" id="redButton1">
                             <property name="label" translatable="yes">Red</property>
                             <property name="name">red</property>
                             <property name="visible">True</property>
@@ -277,7 +234,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkButton" id="greenButton">
+                          <object class="GtkButton" id="greenButton1">
                             <property name="label" translatable="yes">Green</property>
                             <property name="name">green</property>
                             <property name="visible">True</property>
@@ -291,7 +248,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkButton" id="blueButton">
+                          <object class="GtkButton" id="blueButton1">
                             <property name="label" translatable="yes">Blue</property>
                             <property name="name">blue</property>
                             <property name="visible">True</property>
@@ -305,7 +262,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkButton" id="whiteButton">
+                          <object class="GtkButton" id="whiteButton1">
                             <property name="label" translatable="yes">White</property>
                             <property name="name">white</property>
                             <property name="visible">True</property>
@@ -325,33 +282,13 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkDrawingArea">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                      </object>
-                      <packing>
-                        <property name="left-attach">1</property>
-                        <property name="top-attach">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkDrawingArea">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                      </object>
-                      <packing>
-                        <property name="left-attach">2</property>
-                        <property name="top-attach">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkLabel" id="titlePresets">
+                      <object class="GtkLabel" id="titlePresets1">
                         <property name="height-request">40</property>
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="halign">center</property>
                         <property name="hexpand">True</property>
-                        <property name="label" translatable="yes">Presets</property>
+                        <property name="label" translatable="yes">Home</property>
                         <attributes>
                           <attribute name="style" value="normal"/>
                           <attribute name="weight" value="ultrabold"/>
@@ -365,24 +302,16 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkDrawingArea">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                      </object>
-                      <packing>
-                        <property name="left-attach">1</property>
-                        <property name="top-attach">0</property>
-                      </packing>
+                      <placeholder/>
                     </child>
                     <child>
-                      <object class="GtkDrawingArea">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                      </object>
-                      <packing>
-                        <property name="left-attach">2</property>
-                        <property name="top-attach">0</property>
-                      </packing>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
                     </child>
                   </object>
                   <packing>
@@ -392,158 +321,78 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkDrawingArea">
+                  <object class="GtkDrawingArea" id="lightVis">
+                    <property name="height-request">100</property>
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
+                    <property name="valign">end</property>
+                    <property name="margin-start">30</property>
+                    <property name="margin-end">30</property>
+                    <property name="margin-top">50</property>
+                    <property name="margin-bottom">50</property>
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
+                    <signal name="draw" handler="drawLightVis" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">1</property>
+                    <property name="position">2</property>
                   </packing>
                 </child>
               </object>
               <packing>
-                <property name="name">Presets</property>
-                <property name="title" translatable="yes">PRESETS</property>
-                <property name="position">1</property>
+                <property name="name">Home</property>
+                <property name="title" translatable="yes">HOME</property>
               </packing>
             </child>
             <child>
               <object class="GtkBox" id="customContainer">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
+                <property name="margin-end">70</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <!-- n-columns=3 n-rows=3 -->
-                  <object class="GtkGrid">
+                  <object class="GtkLabel" id="titleCustom">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="margin-start">15</property>
-                    <property name="margin-end">15</property>
-                    <property name="margin-top">15</property>
-                    <property name="margin-bottom">15</property>
-                    <property name="row-spacing">25</property>
-                    <property name="column-spacing">25</property>
-                    <child>
-                      <object class="GtkDrawingArea">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                      </object>
-                      <packing>
-                        <property name="left-attach">1</property>
-                        <property name="top-attach">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkDrawingArea">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                      </object>
-                      <packing>
-                        <property name="left-attach">1</property>
-                        <property name="top-attach">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkButton">
-                        <property name="label" translatable="yes">Set Color</property>
-                        <property name="visible">True</property>
-                        <property name="can-focus">True</property>
-                        <property name="receives-default">True</property>
-                        <signal name="clicked" handler="customColorButtonClicked" object="colorPicker" swapped="no"/>
-                      </object>
-                      <packing>
-                        <property name="left-attach">1</property>
-                        <property name="top-attach">2</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkDrawingArea">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                      </object>
-                      <packing>
-                        <property name="left-attach">2</property>
-                        <property name="top-attach">2</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkLabel" id="titleCustom">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="halign">center</property>
-                        <property name="hexpand">True</property>
-                        <property name="label" translatable="yes">Custom</property>
-                        <attributes>
-                          <attribute name="style" value="normal"/>
-                          <attribute name="weight" value="ultrabold"/>
-                          <attribute name="variant" value="small-caps"/>
-                          <attribute name="size" value="15360"/>
-                        </attributes>
-                      </object>
-                      <packing>
-                        <property name="left-attach">0</property>
-                        <property name="top-attach">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkButtonBox">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="valign">center</property>
-                        <property name="vexpand">True</property>
-                        <property name="orientation">vertical</property>
-                        <property name="layout-style">start</property>
-                        <child>
-                          <object class="GtkButton" id="searchScriptButton">
-                            <property name="label" translatable="yes">Search Custom Scripts</property>
-                            <property name="visible">True</property>
-                            <property name="can-focus">True</property>
-                            <property name="receives-default">True</property>
-                            <signal name="clicked" handler="searchScriptButtonClicked" swapped="no"/>
-                          </object>
-                          <packing>
-                            <property name="expand">True</property>
-                            <property name="fill">True</property>
-                            <property name="position">0</property>
-                          </packing>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="left-attach">2</property>
-                        <property name="top-attach">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkDrawingArea">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                      </object>
-                      <packing>
-                        <property name="left-attach">2</property>
-                        <property name="top-attach">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkDrawingArea" id="colorWheel">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                      </object>
-                      <packing>
-                        <property name="left-attach">0</property>
-                        <property name="top-attach">1</property>
-                      </packing>
-                    </child>
+                    <property name="halign">center</property>
+                    <property name="margin-top">24</property>
+                    <property name="margin-bottom">34</property>
+                    <property name="hexpand">True</property>
+                    <property name="label" translatable="yes">Custom</property>
+                    <attributes>
+                      <attribute name="style" value="normal"/>
+                      <attribute name="weight" value="ultrabold"/>
+                      <attribute name="variant" value="small-caps"/>
+                      <attribute name="size" value="15360"/>
+                    </attributes>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
+                        <property name="halign">center</property>
                         <child>
                           <object class="GtkColorChooserWidget" id="colorPicker">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
+                            <property name="margin-start">100</property>
+                            <property name="margin-top">5</property>
                             <property name="rgba">rgb(0,0,0)</property>
+                            <property name="use-alpha">False</property>
+                            <property name="show-editor">True</property>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -553,21 +402,11 @@
                         </child>
                       </object>
                       <packing>
-                        <property name="left-attach">0</property>
-                        <property name="top-attach">2</property>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
                       </packing>
                     </child>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkDrawingArea">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -579,7 +418,7 @@
               <packing>
                 <property name="name">Custom</property>
                 <property name="title" translatable="yes">CUSTOM</property>
-                <property name="position">2</property>
+                <property name="position">1</property>
               </packing>
             </child>
             <child>
@@ -600,6 +439,7 @@
                         <property name="margin-end">10</property>
                         <property name="margin-top">10</property>
                         <property name="margin-bottom">10</property>
+                        <property name="hexpand">True</property>
                         <child>
                           <object class="GtkTextView" id="lights-dsl-text-view">
                             <property name="visible">True</property>
@@ -620,6 +460,7 @@
                     <property name="width-request">170</property>
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
+                    <property name="halign">end</property>
                     <property name="margin-start">10</property>
                     <property name="margin-end">10</property>
                     <property name="margin-top">25</property>
@@ -704,7 +545,7 @@
               <packing>
                 <property name="name">Write</property>
                 <property name="title" translatable="yes">CREATE</property>
-                <property name="position">3</property>
+                <property name="position">2</property>
               </packing>
             </child>
           </object>

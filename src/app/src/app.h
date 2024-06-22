@@ -5,6 +5,12 @@
 #include <math.h>
 #include <lights-dsl.h>
 
+#ifdef __linux__
+#include <unistd.h>
+#elif _WIN32
+#include <Windows.h>
+#endif // __linux__ or windows
+
 #include "utils/utillib.h"
 
 /// @macros:
@@ -25,20 +31,6 @@ void presetButtonClicked(GtkButton *button, __attribute__((unused)) gpointer poi
 ///     get the current brightness, and send a req to 
 ///     the server
 void setBrightnessClicked(GtkWidget *widget, __attribute__((unused)) gpointer pointer);
-
-/// @param:
-///     the custom color button
-/// @purpose:
-///     get the current color and send it 
-///     to the server
-void customColorButtonClicked(GtkWidget *widget, __attribute__((unused)) gpointer pointer);
-
-/// @param:
-///     the search button
-/// @purpose:
-///     open a new window in the scripts/ directory
-///     for the user to select a script
-void searchScriptButtonClicked(GtkWidget *widget, __attribute__((unused)) gpointer pointer);
 
 /// @param:
 ///     the save button
@@ -75,6 +67,13 @@ gboolean drawLightVis(GtkWidget *widget, cairo_t *cr, __attribute__((unused)) gp
 ///     draws the lights compiled in run (defaults to grey)
 gboolean drawLightCompiled(GtkWidget *widget, cairo_t *cr, __attribute__((unused)) gpointer pointer);
 
+/// @params: 
+///     color_picker: the color picker
+/// @purpose:
+///     Streams the current color on the color picker
+///     straight to the leds
+gboolean colorStream(gpointer color_picker);
+
 /// @purpose:
 ///     destroy the window
 void windowDelete(__attribute__((unused)) GtkWidget *widget, 
@@ -88,6 +87,13 @@ void windowDelete(__attribute__((unused)) GtkWidget *widget,
 ///     running function
 void updateState(const gchar *func, size_t len);
 
+/// @params:
+///     None
+/// @purpose:
+///     A safety measure to prevent infinite recursion
+///     especially when streaming.
+gboolean recursionResetCallback();
+
 /// @purpose:
 ///     the light visualisation callback
 static gboolean lightVisCallback(gpointer data);
@@ -100,6 +106,8 @@ static gboolean lightVisCallback(gpointer data);
 typedef struct{
     void (*activeFunction)(LightDisplayArea *lda); 
     double brightness;
+    size_t num_req;
+    GdkRGBA prevColor;
 } State;
 
-#endif
+#endif // APP_H

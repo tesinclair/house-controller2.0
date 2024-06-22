@@ -14,6 +14,7 @@ char hc_app_dir[MAX_PATH_LEN];
 int main(int argc, char *argv[]){
     GtkWidget *window;
     GtkWidget *lightVis;
+    GtkWidget *colorPicker;
     FILE *fptr;
 
     // Define the directories
@@ -29,7 +30,10 @@ int main(int argc, char *argv[]){
     iter = 1;
     state.activeFunction = utilLightWait;
     state.brightness = 1.0;
-
+    state.num_req = 0;
+    state.prevColor.red = 0;
+    state.prevColor.green = 0;
+    state.prevColor.blue = 0;
 
     gtk_init(&argc, &argv);
 
@@ -43,7 +47,11 @@ int main(int argc, char *argv[]){
 
     lightVis = GTK_WIDGET(gtk_builder_get_object(builder, "lightVis"));
 
+    colorPicker = GTK_WIDGET(gtk_builder_get_object(builder, "colorPicker"));
+
     g_timeout_add(10, lightVisCallback, lightVis);
+    g_timeout_add(100, G_SOURCE_FUNC(colorStream), colorPicker);
+    g_timeout_add(100, G_SOURCE_FUNC(recursionResetCallback), NULL);
 
     gtk_widget_show_all(window);
     gtk_main();
@@ -71,6 +79,7 @@ void presetButtonClicked(GtkButton *button, __attribute__((unused)) gpointer poi
     strncat(req.data, func, funcLen);
 
     utilClientSend(&req, memoryStack);
+    state.num_req++;
 
     utilStackFree(memoryStack, req.data);
 
@@ -102,22 +111,11 @@ void setBrightnessClicked(__attribute__((unused)) GtkWidget *widget,
     strncat(req.data, brightnessValStr, brightnessValLen);
 
     utilClientSend(&req, memoryStack);
+    state.num_req++;
 
     state.brightness = (double)brightnessValue / 100;
 
     utilStackFree(memoryStack, req.data);
-}
-
-void customColorButtonClicked(GtkWidget *widget, gpointer data){
-    GdkRGBA customColor;
-
-    gtk_color_chooser_get_rgba(GTK_COLOR_CHOOSER(data), &customColor);
-
-    g_print("Selected color: (%d, %d, %d)", round(customColor.red * 255), round(customColor.green * 255), round(customColor.blue * 255));
-}
-
-void searchScriptButtonClicked(GtkWidget *widget, __attribute__((unused)) gpointer pointer){
-    g_print("searchScriptButtonClicked");
 }
 
 void saveButtonClicked(GtkWidget *widget, gpointer text_view){
@@ -150,7 +148,6 @@ void saveButtonClicked(GtkWidget *widget, gpointer text_view){
         g_free(filename);
     }
     gtk_widget_destroy(dialog);
-
 }
 
 void openButtonClicked(GtkWidget *widget, gpointer text_view){
@@ -185,7 +182,77 @@ void openButtonClicked(GtkWidget *widget, gpointer text_view){
     gtk_widget_destroy(dialog);
 }
 
-void runBtnClicked(GtkWidget *widget, __attribute__((unused)) gpointer pointer){
+/// TODO: 
+///     - Create and implement an interpreter for the light sim
+///     - Override errors to stop crashes. Or integrate a 
+///         new parser with red squigglies
+///     - Syntax highlighting
+void runBtnClicked(GtkWidget *widget, gpointer text_view){
+    lexer *l;
+    parser *p;
+    token **tokenStream;
+    GtkTextBuffer *buf;
+    GtkTextIter start, end;
+    char *contents;
+
+    buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(text_view));
+    gtk_text_buffer_get_bounds(buf, &start, &end);
+    contents = gtk_text_buffer_get_text(buf, &start, &end, FALSE);
+
+    l = lexer_new_lexer(contents);
+    tokenStream = lexer_lex(l);
+    p = parser_new_parser(tokenStream);
+    parser_parse(p);
+
+    g_free(contents);
+    
+    printf("Code parses\n");
+}
+
+gboolean colorStream(gpointer color_picker){
+    GdkRGBA customColor;
+    Request req;
+
+    size_t max_length = 51; // Data will max at: func:colorwheel,(123, 456, 789)
+    
+    req.data = malloc(max_length);
+
+    gtk_color_chooser_get_rgba(GTK_COLOR_CHOOSER(color_picker), &customColor);
+
+    // Don't waste resources by sending repetetive data
+    if (customColor.red == state.prevColor.red && 
+            customColor.green == state.prevColor.green && 
+            customColor.blue == state.prevColor.blue){
+        return TRUE;
+    }
+    state.prevColor.red = customColor.red;
+    state.prevColor.green = customColor.green;
+    state.prevColor.blue = customColor.blue;
+    
+    snprintf(req.data, max_length - 1, "func:colorwheel#(%d, %d, %d)", 
+            (int) round(customColor.red * 255), 
+            (int) round(customColor.green * 255), 
+            (int) round(customColor.blue * 255)
+            );
+    req.length = strlen(req.data);
+    utilClientSend(&req, memoryStack);
+    state.num_req++;
+
+    return TRUE;
+}
+
+gboolean recursionResetCallback(){
+    if (state.num_req > 50){
+        Request req;
+        req.data = "func:wait";
+        req.length = 9;
+
+        utilClientSend(&req, memoryStack);
+        state.num_req = 0;
+
+        return TRUE;
+    }
+    return TRUE;
 }
 
 gboolean drawLightVis(GtkWidget *widget, cairo_t *cr, __attribute__((unused)) gpointer pointer){
