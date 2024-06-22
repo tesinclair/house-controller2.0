@@ -133,7 +133,8 @@ class LedStrip():
                 case "colorwheel":
                     self.light(arg1)
                 case "wait":
-                    self.wait()
+                    # Used to reset recursion.
+                    return True
                 case "quit":
                     return False
 
@@ -150,7 +151,7 @@ class LedStrip():
                 func(pallete)
             else:
                 func()
-    
+
     def light(self, color=None):
         if not color: color = self.white
         self.pixels.fill(tuple(round(x*self.brightness) for x in color))

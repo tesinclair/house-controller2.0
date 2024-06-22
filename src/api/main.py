@@ -21,7 +21,7 @@ def main():
 
         with LedStrip(q) as controller:
             while True:
-                if not controller.next(None):
+                if not controller.next(params):
                     break
 
     except Exception as e:
