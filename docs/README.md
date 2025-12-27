@@ -14,13 +14,9 @@ This project aims to provide a comprehensive and modular smart home control syst
 Detailed setup instructions for each component (API, Desktop App) will be provided in their respective directories or dedicated documentation files.
 
 ### API Setup
-(Refer to `src/api/README.md` if available, or create one)
+Simply create a python environment on a Raspberry Pi with `python3 -m venv venv`, then run `python3 main.py`.
 
 ### Desktop App Setup
-(Refer to `src/app/README.md` if available, or create one)
+Navigate to `src/app` run `sudo autogen.sh`. Input your ideal scrips location (default: `~/.houseleds/scripts`).
+Wait for it to build, add the `house-controller` binary (inside `src/app/build`) to your PATH and run.
 
-## Documentation Structure
--   `docs/desktop-app-design.drawio`: Design diagrams for the desktop application.
--   `docs/gpio-event-loop.drawio`: Diagrams illustrating the GPIO event loop.
--   `docs/mobile-app-design.drawio`: Design diagrams for the (deprecated) mobile application.
--   `docs/README.md`: This file.
