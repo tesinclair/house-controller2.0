@@ -16,13 +16,13 @@ fi
 
 USR_HOME=$(getent passwd $SUDO_USER | cut -d: -f6)
 
-echo "Default scripts directory is $USR_HOME/house-controller/scripts"
+echo "Default scripts directory is $USR_HOME/.houseleds/scripts"
 echo "Which directory should scripts be help in? (enter for default)"
 read script_dir
 
 if [ -z "$script_dir" ]; then
-    mkdir -p "$USR_HOME/house-controller/scripts" && \
-    script_dir="$USR_HOME/house-controller/scripts"
+    mkdir -p "$USR_HOME/.houseleds/scripts" && \
+    script_dir="$USR_HOME/.houseleds/scripts"
 
 elif [ ! -d "$script_dir" ]; then
     echo "Directory $script_dir not found. Create? (y/n)"
